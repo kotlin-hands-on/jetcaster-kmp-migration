@@ -42,13 +42,13 @@ jobs:
         uses: ./.github/actions/gradle-setup
 
       - name: Build Android debug APK
-        run: ./gradlew :mobile:assembleDebug
+        run: ./gradlew :androidApp:assembleDebug
 
       - name: Upload Android debug APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: mobile/build/outputs/apk/debug/*.apk
+          path: androidApp/build/outputs/apk/debug/*.apk
 
 
   build-ios:
@@ -65,7 +65,7 @@ jobs:
       - name: Build iOS simulator app
         run: |
           xcodebuild build \
-          -project JetcasterMigration/JetcasterMigration.xcodeproj \
+          -project iosApp/JetcasterMigration.xcodeproj \
           -configuration Debug \
           -scheme JetcasterMigration \
           -sdk iphonesimulator \
@@ -90,7 +90,7 @@ jobs:
         uses: ./.github/actions/gradle-setup
 
       - name: Build macOS DMG
-        run: ./gradlew :sharedUi:packageDmg
+        run: ./gradlew :desktopApp:packageDmg
 
       - name: Upload macOS DMG
         uses: actions/upload-artifact@v4
@@ -110,13 +110,13 @@ jobs:
         uses: gradle/actions/setup-gradle@v5.0.0
 
       - name: Build Windows MSI
-        run: ./gradlew :sharedUi:packageMsi
+        run: ./gradlew :desktopApp:packageMsi
 
       - name: Upload Windows MSI
         uses: actions/upload-artifact@v4
         with:
           name: desktop-windows-msi
-          path: sharedUi/build/compose/binaries/main/msi/*.msi
+          path: desktopApp/build/compose/binaries/main/msi/*.msi
 
   build-desktop-linux:
     name: Build Desktop Linux
@@ -130,10 +130,10 @@ jobs:
         uses: ./.github/actions/gradle-setup
 
       - name: Build Linux DEB
-        run: ./gradlew :sharedUi:packageDeb
+        run: ./gradlew :desktopApp:packageDeb
 
       - name: Upload Linux DEB
         uses: actions/upload-artifact@v4
         with:
           name: desktop-linux-deb
-          path: sharedUi/build/compose/binaries/main/deb/*.deb
+          path: desktopApp/build/compose/binaries/main/deb/*.deb
