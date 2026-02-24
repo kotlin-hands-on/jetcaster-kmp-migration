@@ -22,7 +22,7 @@ plugins {
 
 kotlin {
     androidLibrary {
-        namespace = "com.example.jetcaster.core.domain.testing"
+        namespace = "com.example.jetcaster.core.data.testing"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
     }
@@ -32,15 +32,16 @@ kotlin {
         freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
     }
 
-    jvm()
     iosX64()
     iosArm64()
     iosSimulatorArm64()
 
+    // Desktop target (JVM)
+    jvm()
+
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.domain)
-            implementation(libs.kotlinx.datetime)
+            implementation(projects.sharedLogic.data)
             implementation(libs.kotlinx.coroutines.core)
         }
     }

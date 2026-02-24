@@ -47,11 +47,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Compose Multiplatform dependencies
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
 
             //Image loading
             implementation(libs.coil.kt.compose)

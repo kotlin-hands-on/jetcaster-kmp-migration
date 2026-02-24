@@ -52,7 +52,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.data)
+            implementation(projects.sharedLogic.data)
             implementation(libs.koin.core)
             implementation(libs.kotlinx.datetime)
         }
@@ -66,7 +66,7 @@ kotlin {
         }
 
         commonTest.dependencies {
-            implementation(projects.core.dataTesting)
+            implementation(projects.sharedLogic.dataTesting)
             implementation(libs.kotlinx.test.core)
             implementation(libs.kotlinx.coroutines.test)
         }

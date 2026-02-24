@@ -30,7 +30,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		26D5C6962EB22FB2005B3A23 /* Exceptions for "JetcasterMigration" folder in "JetcasterMigration" target */ = {
+		26D5C6962EB22FB2005B3A23 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -43,7 +43,7 @@
 		260DDD312EB223FC00169680 /* JetcasterMigration */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				26D5C6962EB22FB2005B3A23 /* Exceptions for "JetcasterMigration" folder in "JetcasterMigration" target */,
+				26D5C6962EB22FB2005B3A23 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
 			);
 			path = JetcasterMigration;
 			sourceTree = "<group>";
@@ -112,7 +112,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 260DDD502EB223FE00169680 /* Build configuration list for PBXNativeTarget "JetcasterMigration" */;
 			buildPhases = (
-				26088AA62EB224BA00601638 /* ShellScript */,
+				26088AA62EB224BA00601638 /* Run Script */,
 				260DDD2B2EB223FC00169680 /* Sources */,
 				260DDD2C2EB223FC00169680 /* Frameworks */,
 				260DDD2D2EB223FC00169680 /* Resources */,
@@ -246,7 +246,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		26088AA62EB224BA00601638 /* ShellScript */ = {
+		26088AA62EB224BA00601638 /* Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -255,13 +255,14 @@
 			);
 			inputPaths = (
 			);
+			name = "Run Script";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :shared:embedAndSignAppleFrameworkForXcode\n";
+			shellScript = "cd \"$SRCROOT/..\"\n./gradlew :sharedUi:embedAndSignAppleFrameworkForXcode\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -431,7 +432,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 7C4ZHNA4Y8;
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;

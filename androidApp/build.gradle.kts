@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  * Copyright 2020 The Android Open Source Project
  *
@@ -14,17 +16,25 @@
  * limitations under the License.
  */
 
-
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+    target {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
+    }
+
+    dependencies {
+        implementation(projects.sharedUi)
+        implementation(libs.koin.android)
+        implementation(libs.androidx.activity.compose)
+        implementation(libs.androidx.compose.ui.tooling.preview)
+        implementation(libs.accompanist.adaptive)
     }
 }
 
@@ -79,24 +89,15 @@ android {
     }
 
     compileOptions {
-        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 
     buildFeatures {
-        compose = true
         buildConfig = true
     }
 
     packaging.resources {
-        // The Rome library JARs embed some internal utils libraries in nested JARs.
-        // We don't need them so we exclude them in the final package.
-        excludes += "/*.jar"
-
         // Multiple dependency bring these files in. Exclude them to enable
         // our test APK to build (has no effect on our AARs)
         excludes += "/META-INF/AL2.0"
@@ -108,58 +109,4 @@ android {
         metricsDestination = layout.buildDirectory.dir("compose_compiler")
         stabilityConfigurationFiles = listOf(rootProject.layout.projectDirectory.file("stability_config.conf"))
     }
-}
-
-dependencies {
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    androidTestImplementation(composeBom)
-
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlinx.coroutines.android)
-    implementation(libs.kotlinx.collections.immutable)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.palette)
-
-    // Dependency injection
-    implementation(libs.koin.android)
-    implementation(libs.koin.androidx.compose)
-    implementation(libs.koin.compose.viewmodel)
-    implementation(libs.koin.androidx.compose.navigation)
-    implementation(libs.koin.core)
-
-    // Compose
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.material3.adaptive)
-    implementation(libs.androidx.compose.material3.adaptive.layout)
-    implementation(libs.androidx.compose.material3.adaptive.navigation)
-    implementation(libs.androidx.compose.ui)
-    implementation(libs.androidx.compose.ui.tooling.preview)
-    debugImplementation(libs.androidx.compose.ui.tooling)
-
-    implementation(libs.androidx.lifecycle.runtime)
-    implementation(libs.androidx.lifecycle.viewModelCompose)
-    implementation(libs.androidx.lifecycle.runtime.compose)
-    implementation(libs.androidx.navigation.compose)
-
-    implementation(libs.androidx.window)
-    //implementation(libs.androidx.window.core)
-
-    implementation(libs.accompanist.adaptive)
-
-    implementation(libs.coil.kt.compose)
-
-    implementation(projects.core.data)
-    implementation(projects.core.designsystem)
-    implementation(projects.core.designsystem)
-    implementation(projects.core.domain)
-    implementation(projects.core.domainTesting)
-    implementation(projects.sharedUi)
-
-    coreLibraryDesugaring(libs.core.jdk.desugaring)
-
-    implementation(libs.kotlinx.datetime)
 }
