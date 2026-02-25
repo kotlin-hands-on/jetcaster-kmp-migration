@@ -2,19 +2,10 @@
 accompanist = "0.37.3"
 androidGradlePlugin = "9.0.1"
 androidx-activity-compose = "1.12.4"
-androidx-appcompat = "1.7.1"
-androidx-compose-bom = "2026.02.00"
-androidx-corektx = "1.17.0"
-androidx-lifecycle-compose = "2.10.0"
 androidx-lifecycle-runtime-compose = "2.10.0"
-android-material3 = "1.13.0"
-androidx-navigation = "2.9.7"
-androidx-palette = "1.0.0"
-androidx-test-espresso = "3.7.0"
 androidx-test-ext-junit = "1.3.0"
 androidx-test = "1.7.0"
 androidx-window = "1.5.1"
-androidxHiltNavigationCompose = "1.3.0"
 compose-multiplatform = "1.10.0"
 compose-multiplatform-material3 = "1.10.0-alpha05"
 coil = "3.3.0"
@@ -22,11 +13,9 @@ coil = "3.3.0"
 cmp-m3-adaptive = "1.2.0"
 compileSdk = "36"
 coroutines = "1.10.2"
-gradle-versions = "0.53.0"
 koin = "4.1.1"
 konnectivity = "0.1-alpha01"
 ktor = "3.4.0"
-jdkDesugar = "2.1.5"
 kotlinx-test = "2.3.10"
 kotlinxDatetime = "0.7.1"
 kotlin = "2.3.10"
@@ -35,7 +24,6 @@ ksp = "2.3.6"
 navigationCompose = "2.9.2"
 # @keep
 minSdk = "23"
-okhttp = "5.3.2"
 rssparser = "6.1.4"
 htmlconverter = "1.1.0"
 room = "2.8.4"
@@ -51,40 +39,18 @@ kotlinx-coroutines-swing = "1.10.2"
 [libraries]
 accompanist-adaptive = { module = "com.google.accompanist:accompanist-adaptive", version.ref = "accompanist" }
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity-compose" }
-androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "androidx-appcompat" }
-androidx-compose-bom = { module = "androidx.compose:compose-bom-alpha", version.ref = "androidx-compose-bom" }
-androidx-compose-foundation = { module = "androidx.compose.foundation:foundation" }
-androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
-androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
-androidx-compose-material3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
-androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
-androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-runtime-annotation = { module = "androidx.compose.runtime:runtime-annotation", version.ref = "runtimeAnnotation" }
-androidx-compose-ui = { module = "androidx.compose.ui:ui" }
-androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
-androidx-compose-ui-text = { module = "androidx.compose.ui:ui-text" }
-androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref="compose-multiplatform" }
-androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-corektx" }
-androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
-androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle-compose" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "androidx-lifecycle-runtime-compose" }
-androidx-lifecycle-viewModelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle-compose" }
-androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
-androidx-palette = { module = "androidx.palette:palette", version.ref = "androidx-palette" }
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
-androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext-junit" }
 androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
-androidx-window-core = { module = "androidx.window:window-core", version.ref = "androidx-window" }
 coil-kt-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
-core-jdk-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "jdkDesugar" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 compose-components-resources = { module = "org.jetbrains.compose.components:components-resources", version.ref = "compose-multiplatform" }
@@ -102,23 +68,18 @@ html-converter = { module = "be.digitalia.compose.htmlconverter:htmlconverter", 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
-koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 konnectivity = { module = "com.plusmobileapps:konnectivity", version.ref = "konnectivity" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-test-core = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlinx-test" }
 kotlinx-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlinx-test" }
 kotlinx-test-annotations-common = { module = "org.jetbrains.kotlin:kotlin-test-annotations-common", version.ref = "kotlinx-test" }
-kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx_immutable" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines-swing" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
-okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparser" }
 uri-kmp = { module = "com.eygraber:uri-kmp", version.ref = "uriKmp" }
 
@@ -126,7 +87,6 @@ uri-kmp = { module = "com.eygraber:uri-kmp", version.ref = "uriKmp" }
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
-gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
