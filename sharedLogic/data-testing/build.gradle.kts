@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -28,11 +27,7 @@ kotlin {
     }
 
     jvmToolchain(17)
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 

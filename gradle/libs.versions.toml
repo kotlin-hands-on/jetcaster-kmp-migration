@@ -15,7 +15,7 @@ androidx-test-ext-junit = "1.3.0"
 androidx-test = "1.7.0"
 androidx-window = "1.5.1"
 androidxHiltNavigationCompose = "1.3.0"
-compose-multiplatform = "1.10.1"
+compose-multiplatform = "1.10.0"
 compose-multiplatform-material3 = "1.10.0-alpha05"
 coil = "3.3.0"
 # @keep
@@ -39,6 +39,8 @@ okhttp = "5.3.2"
 rssparser = "6.1.4"
 htmlconverter = "1.1.0"
 room = "2.8.4"
+runtime = "1.10.3"
+runtimeAnnotation = "1.10.3"
 sqlite = "2.6.2"
 spotless = "8.2.1"
 # @keep
@@ -57,6 +59,7 @@ androidx-compose-material3-adaptive = { module = "androidx.compose.material3.ada
 androidx-compose-material3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
 androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
 androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
+androidx-compose-runtime-annotation = { module = "androidx.compose.runtime:runtime-annotation", version.ref = "runtimeAnnotation" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-compose-ui-text = { module = "androidx.compose.ui:ui-text" }
@@ -72,6 +75,7 @@ androidx-palette = { module = "androidx.palette:palette", version.ref = "android
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-runtime = { module = "androidx.compose.runtime:runtime", version.ref = "runtime" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
 androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
@@ -120,7 +124,6 @@ uri-kmp = { module = "com.eygraber:uri-kmp", version.ref = "uriKmp" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 gradle-versions = { id = "com.github.ben-manes.versions", version.ref = "gradle-versions" }

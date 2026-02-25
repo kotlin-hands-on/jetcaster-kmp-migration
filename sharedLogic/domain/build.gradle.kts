@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -39,11 +37,7 @@ kotlin {
     }
 
     jvmToolchain(17)
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -57,27 +51,27 @@ kotlin {
             implementation(libs.kotlinx.datetime)
         }
 
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.koin.android)
-        }
-
-        iosMain.dependencies {
-        }
-
         commonTest.dependencies {
             implementation(projects.sharedLogic.dataTesting)
             implementation(libs.kotlinx.test.core)
             implementation(libs.kotlinx.coroutines.test)
         }
 
-        jvmMain.dependencies {
-            implementation(libs.kotlinx.coroutines.swing)
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.koin.android)
         }
 
         getByName("androidDeviceTest").dependencies {
             implementation(libs.androidx.test.runner)
             implementation(libs.androidx.test.ext.junit)
+        }
+
+        iosMain.dependencies {
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }
@@ -85,6 +79,6 @@ kotlin {
 dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
 }

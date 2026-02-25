@@ -13,8 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -39,11 +37,7 @@ kotlin {
     }
 
     jvmToolchain(17)
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -53,11 +47,12 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // We need to provide have @Immutable annotations here
-            implementation("androidx.compose.runtime:runtime-annotation:1.9.0")
-            implementation("androidx.compose.runtime:runtime:1.9.0")
+            implementation(libs.androidx.compose.runtime.annotation)
+            implementation(libs.androidx.runtime)
 
             // Dependency injection
             implementation(libs.koin.core)
+
             // Database
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
@@ -65,23 +60,18 @@ kotlin {
             // RSS Parser library
             implementation(libs.rssparser)
             implementation(libs.kotlinx.coroutines.core)
+
             // Dates and times
             implementation(libs.kotlinx.datetime)
-
-        }
-
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.android)
-//            coreLibraryDesugaring(libs.core.jdk.desugaring)
-        }
-
-        iosMain.dependencies {
-            implementation(libs.konnectivity)
         }
 
         commonTest.dependencies {
             implementation(libs.kotlinx.test.core)
             implementation(libs.kotlinx.coroutines.test)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
         }
 
         getByName("androidDeviceTest").dependencies {
@@ -90,6 +80,10 @@ kotlin {
             implementation(libs.androidx.test.runner)
             implementation(libs.androidx.test.core)
             implementation(libs.androidx.test.ext.junit)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.konnectivity)
         }
     }
 }
@@ -101,7 +95,6 @@ room {
 dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
     add("kspJvm", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
 }

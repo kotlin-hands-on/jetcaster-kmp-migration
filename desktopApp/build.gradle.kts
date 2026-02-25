@@ -22,15 +22,12 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-kotlin {
-    dependencies {
-        implementation(projects.sharedUi)
-
-        implementation(compose.desktop.currentOs)
-        implementation(libs.compose.material3.adaptive)
-        implementation(libs.koin.compose)
-        implementation(libs.kotlinx.coroutines.swing)
-    }
+dependencies {
+    implementation(projects.sharedUi)
+    implementation(compose.desktop.currentOs)
+    implementation(libs.compose.material3.adaptive)
+    implementation(libs.koin.compose)
+    implementation(libs.kotlinx.coroutines.swing)
 }
 
 compose.desktop.application {

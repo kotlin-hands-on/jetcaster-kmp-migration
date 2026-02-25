@@ -7,7 +7,6 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-
 kotlin {
     androidLibrary {
         namespace = "com.example.jetcaster.sharedui"
@@ -17,21 +16,20 @@ kotlin {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_11
         }
+
         androidResources {
             enable = true
         }
+
         withHostTest {
             isIncludeAndroidResources = true
         }
     }
 
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
+    jvmToolchain(17)
 
     // iOS targets
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach {
@@ -51,12 +49,13 @@ kotlin {
             api(projects.sharedLogic.designsystem)
             implementation(projects.sharedLogic.domainTesting)
 
-            implementation(libs.kotlin.stdlib)
             implementation(libs.kotlinx.coroutines.core)
+
             // Dependency injection
             api(libs.koin.core)
             api(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
+
             // Compose Multiplatform dependencies
             implementation(libs.compose.runtime)
             implementation(libs.compose.foundation)

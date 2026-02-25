@@ -22,20 +22,12 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-kotlin {
-    target {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
-        }
-    }
-
-    dependencies {
-        implementation(projects.sharedUi)
-        implementation(libs.koin.android)
-        implementation(libs.androidx.activity.compose)
-        implementation(libs.androidx.compose.ui.tooling.preview)
-        implementation(libs.accompanist.adaptive)
-    }
+dependencies {
+    implementation(projects.sharedUi)
+    implementation(libs.koin.android)
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.accompanist.adaptive)
 }
 
 android {
@@ -65,13 +57,16 @@ android {
         val userKeystore = File(System.getProperty("user.home"), ".android/debug.keystore")
         val localKeystore = rootProject.file("debug_2.keystore")
         val hasKeyInfo = userKeystore.exists()
-        create("release", Action {
-            // get from env variables
-            storeFile = if (hasKeyInfo) userKeystore else localKeystore
-            storePassword = if (hasKeyInfo) "android" else System.getenv("compose_store_password")
-            keyAlias = if (hasKeyInfo) "androiddebugkey" else System.getenv("compose_key_alias")
-            keyPassword = if (hasKeyInfo) "android" else System.getenv("compose_key_password")
-        })
+        create(
+            "release",
+            Action {
+                // get from env variables
+                storeFile = if (hasKeyInfo) userKeystore else localKeystore
+                storePassword = if (hasKeyInfo) "android" else System.getenv("compose_store_password")
+                keyAlias = if (hasKeyInfo) "androiddebugkey" else System.getenv("compose_key_alias")
+                keyPassword = if (hasKeyInfo) "android" else System.getenv("compose_key_password")
+            },
+        )
     }
 
     buildTypes {
@@ -108,5 +103,11 @@ android {
         reportsDestination = layout.buildDirectory.dir("compose_compiler")
         metricsDestination = layout.buildDirectory.dir("compose_compiler")
         stabilityConfigurationFiles = listOf(rootProject.layout.projectDirectory.file("stability_config.conf"))
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.JVM_17
     }
 }
