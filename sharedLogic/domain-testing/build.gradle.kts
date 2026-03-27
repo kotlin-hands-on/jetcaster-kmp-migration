@@ -30,6 +30,11 @@ kotlin {
 
     jvm()
 
+    // Browser target (WASM)
+    wasmJs {
+        browser()
+    }
+
     iosArm64()
     iosSimulatorArm64()
 

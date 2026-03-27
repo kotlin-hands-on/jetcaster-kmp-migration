@@ -17,9 +17,9 @@
 package com.example.jetcaster.core.data.database.model
 
 import androidx.compose.runtime.Immutable
-import androidx.room.Embedded
-import androidx.room.Ignore
-import androidx.room.Relation
+import androidx.room3.Embedded
+import androidx.room3.Ignore
+import androidx.room3.Relation
 
 @Immutable
 class EpisodeToPodcast {

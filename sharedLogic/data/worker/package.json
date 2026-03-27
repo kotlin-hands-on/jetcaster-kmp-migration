@@ -1,0 +1,10 @@
+{
+  "name": "sqlite-wasm-worker",
+  "version": "0.0.1",
+  "description": "SQLite WASM web worker for Jetcaster",
+  "main": "worker.js",
+  "private": true,
+  "dependencies": {
+    "@sqlite.org/sqlite-wasm": "^3.50.1-build1"
+  }
+}

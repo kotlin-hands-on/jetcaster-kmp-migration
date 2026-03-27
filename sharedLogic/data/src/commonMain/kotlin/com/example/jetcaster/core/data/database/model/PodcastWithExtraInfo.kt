@@ -16,9 +16,9 @@
 
 package com.example.jetcaster.core.data.database.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Embedded
-import androidx.room.TypeConverters
+import androidx.room3.ColumnInfo
+import androidx.room3.Embedded
+import androidx.room3.TypeConverters
 import kotlin.time.Instant
 
 @TypeConverters(InstantConverterConverter::class)

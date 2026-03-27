@@ -42,6 +42,11 @@ kotlin {
     // Desktop target (JVM)
     jvm()
 
+    // Browser target (WASM)
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         commonMain.dependencies {
             api(projects.sharedLogic.data)
@@ -96,6 +101,11 @@ kotlin {
             implementation(libs.kotlinx.coroutines.swing)
             implementation(compose.desktop.currentOs)
             implementation(libs.coil.network.okhttp)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.coil.network.ktor3)
+            implementation(libs.ktor.client.js)
         }
     }
 }

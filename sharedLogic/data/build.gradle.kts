@@ -44,6 +44,11 @@ kotlin {
     // Desktop target (JVM)
     jvm()
 
+    // Browser target (WASM)
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         commonMain.dependencies {
             // We need to provide have @Immutable annotations here
@@ -55,7 +60,6 @@ kotlin {
 
             // Database
             implementation(libs.androidx.room.runtime)
-            implementation(libs.androidx.sqlite.bundled)
 
             // RSS Parser library
             implementation(libs.rssparser)
@@ -72,6 +76,7 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.sqlite.bundled)
         }
 
         getByName("androidDeviceTest").dependencies {
@@ -82,13 +87,27 @@ kotlin {
             implementation(libs.androidx.test.ext.junit)
         }
 
+        jvmMain.dependencies {
+            implementation(libs.androidx.sqlite.bundled)
+        }
+
         iosMain.dependencies {
             implementation(libs.konnectivity)
+            implementation(libs.androidx.sqlite.bundled)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.androidx.sqlite.web)
+            implementation(
+                npm("sqlite-wasm-worker", layout.projectDirectory.dir("worker").asFile)
+            )
+            implementation(libs.kotlinx.browser)
+            implementation(libs.kotlinx.coroutines.core.wasm.js)
         }
     }
 }
 
-room {
+room3 {
     schemaDirectory("$projectDir/schemas")
 }
 
@@ -97,4 +116,5 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspJvm", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspWasmJs", libs.androidx.room.compiler)
 }

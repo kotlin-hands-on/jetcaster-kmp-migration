@@ -1,6 +1,6 @@
 package com.example.jetcaster.core.data.di
 
-import androidx.room.RoomDatabase
+import androidx.room3.RoomDatabase
 import com.example.jetcaster.core.data.database.JetcasterDatabase
 import com.example.jetcaster.core.data.network.OnlineChecker
 import org.koin.core.module.Module
