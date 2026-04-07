@@ -4,7 +4,6 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    branches: [ main ]
   workflow_dispatch:
 
 env:
@@ -137,3 +136,23 @@ jobs:
         with:
           name: desktop-linux-deb
           path: desktopApp/build/compose/binaries/main/deb/*.deb
+
+  build-wasm:
+    name: Build Wasm
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Gradle setup
+        uses: ./.github/actions/gradle-setup
+
+      - name: Build Wasm distribution
+        run: ./gradlew :wasmApp:wasmJsBrowserDistribution
+
+      - name: Upload Wasm app
+        uses: actions/upload-artifact@v4
+        with:
+          name: wasm-app
+          path: wasmApp/build/dist/wasmJs/productionExecutable/
