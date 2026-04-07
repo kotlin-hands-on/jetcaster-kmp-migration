@@ -69,13 +69,6 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.coil.network.okhttp)
         }
-
-        iosMain.dependencies {
-        }
-
-        wasmJsMain.dependencies {
-            implementation(libs.coil.network.ktor3)
-        }
     }
 }
 
