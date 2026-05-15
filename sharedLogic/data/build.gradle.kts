@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.androidx.room)
     alias(libs.plugins.ksp)
 }
 
 kotlin {
     androidLibrary {
-        namespace = "com.example.jetcaster.core.domain"
+        namespace = "com.example.jetcaster.core.data"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
 
@@ -39,11 +37,7 @@ kotlin {
     }
 
     jvmToolchain(17)
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -52,39 +46,55 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.data)
+            // We need to provide have @Immutable annotations here
+            implementation(libs.androidx.compose.runtime.annotation)
+            implementation(libs.androidx.runtime)
+
+            // Dependency injection
             implementation(libs.koin.core)
+
+            // Database
+            implementation(libs.androidx.room.runtime)
+            implementation(libs.androidx.sqlite.bundled)
+
+            // RSS Parser library
+            implementation(libs.rssparser)
+            implementation(libs.kotlinx.coroutines.core)
+
+            // Dates and times
             implementation(libs.kotlinx.datetime)
         }
 
-        androidMain.dependencies {
-            implementation(libs.kotlinx.coroutines.android)
-            implementation(libs.koin.android)
-        }
-
-        iosMain.dependencies {
-        }
-
         commonTest.dependencies {
-            implementation(projects.core.dataTesting)
             implementation(libs.kotlinx.test.core)
             implementation(libs.kotlinx.coroutines.test)
         }
 
-        jvmMain.dependencies {
-            implementation(libs.kotlinx.coroutines.swing)
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
         }
 
         getByName("androidDeviceTest").dependencies {
+            implementation(libs.kotlinx.test.junit)
+            implementation(libs.kotlinx.test.annotations.common)
             implementation(libs.androidx.test.runner)
+            implementation(libs.androidx.test.core)
             implementation(libs.androidx.test.ext.junit)
         }
+
+        iosMain.dependencies {
+            implementation(libs.konnectivity)
+        }
     }
+}
+
+room {
+    schemaDirectory("$projectDir/schemas")
 }
 
 dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosX64", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
 }

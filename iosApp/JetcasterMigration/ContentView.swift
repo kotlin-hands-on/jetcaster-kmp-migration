@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  JetcasterMigration
+//  iosApp
 //
 //  Created by Aleksey.Zamulla on 29.10.25.
 //

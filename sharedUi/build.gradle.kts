@@ -1,5 +1,4 @@
-import com.android.build.api.dsl.androidLibrary
-import org.jetbrains.compose.desktop.application.dsl.TargetFormat
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
@@ -8,23 +7,29 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
-
 kotlin {
     androidLibrary {
         namespace = "com.example.jetcaster.sharedui"
         compileSdk = libs.versions.compileSdk.get().toInt()
         minSdk = libs.versions.minSdk.get().toInt()
-        androidResources.enable = true
+
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
+
+        androidResources {
+            enable = true
+        }
+
+        withHostTest {
+            isIncludeAndroidResources = true
+        }
     }
 
     jvmToolchain(17)
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
 
     // iOS targets
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach {
@@ -38,34 +43,31 @@ kotlin {
     jvm()
 
     sourceSets {
-
         commonMain.dependencies {
-            api(projects.core.data)
-            api(projects.core.domain)
-            api(projects.core.designsystem)
+            api(projects.sharedLogic.data)
+            api(projects.sharedLogic.domain)
+            api(projects.sharedLogic.designsystem)
+            implementation(projects.sharedLogic.domainTesting)
 
-            implementation(projects.core.domainTesting)
-
-
-            implementation(libs.kotlin.stdlib)
             implementation(libs.kotlinx.coroutines.core)
-            // Dependency injection
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose.viewmodel)
-            // Compose Multiplatform dependencies
-            implementation(compose.runtime)
-            implementation(compose.foundation)
 
-            implementation(libs.compose.material3)
-            implementation(libs.compose.material3.adaptive)
+            // Dependency injection
+            api(libs.koin.core)
+            api(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
+
+            // Compose Multiplatform dependencies
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            api(libs.compose.material3)
+            api(libs.compose.material3.adaptive)
             implementation(libs.compose.material3.adaptive.layout)
             implementation(libs.compose.material3.adaptive.navigation)
-
-            implementation(compose.ui)
+            implementation(libs.compose.ui)
             // TODO this needs to be added, otherwise BackHandler build fails unresolved
             implementation(libs.compose.ui.backhandler)
-            implementation(compose.components.uiToolingPreview)
-            implementation(compose.components.resources)
+            implementation(libs.compose.components.ui.tooling.preview)
+            implementation(libs.compose.components.resources)
             implementation(libs.compose.navigation)
 
             //Image loading
@@ -76,7 +78,6 @@ kotlin {
             implementation(libs.kotlinx.collections.immutable)
 
             implementation(libs.androidx.lifecycle.runtime.compose)
-
         }
 
         androidMain.dependencies {
@@ -103,17 +104,4 @@ compose.resources {
     publicResClass = true
     packageOfResClass = "com.example.jetcaster.shared"
     generateResClass = auto
-}
-
-compose.desktop.application {
-    mainClass = "com.example.jetcaster.shared.MainKt"
-
-    nativeDistributions {
-        targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-        packageName = "com.example.jetcaster"
-        packageVersion = "1.0.0"
-        appResourcesRootDir =
-            layout.projectDirectory.dir("src/jvmMain/assets")
-        jvmArgs += "-splash:${'$'}APPDIR/resources/logo.gif"
-    }
 }

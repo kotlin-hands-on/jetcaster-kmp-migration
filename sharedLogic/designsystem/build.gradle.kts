@@ -14,8 +14,6 @@
  * limitations under the License.
  */
 
-
-
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -33,11 +31,7 @@ kotlin {
     }
 
     jvmToolchain(17)
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
 
-    iosX64()
     iosArm64()
     iosSimulatorArm64()
 
@@ -47,11 +41,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Compose Multiplatform dependencies
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material3)
-            implementation(compose.ui)
-            implementation(compose.components.resources)
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
 
             //Image loading
             implementation(libs.coil.kt.compose)
@@ -59,7 +53,6 @@ kotlin {
             // Dependency injection
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
-
 
             // HTML text converter
             implementation(libs.html.converter)
