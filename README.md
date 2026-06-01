@@ -13,3 +13,6 @@ and design decisions made.
 
 This repository is dedicated to migrating the original Jetcaster to Kotlin Multiplatform:
 sharing as much code 
+
+## The Wasm app
+You can find it [here](https://kotlin-hands-on.github.io/jetcaster-kmp-migration).
