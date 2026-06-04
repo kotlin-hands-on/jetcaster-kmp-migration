@@ -66,6 +66,7 @@ jobs:
           xcodebuild build \
           -project iosApp/JetcasterMigration.xcodeproj \
           -configuration Debug \
+          -destination "platform=iOS Simulator,name=iPhone 17,arch=arm64" \
           -scheme JetcasterMigration \
           -sdk iphonesimulator \
           -derivedDataPath ./build \
