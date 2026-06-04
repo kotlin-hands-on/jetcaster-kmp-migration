@@ -20,13 +20,8 @@ package com.example.jetcaster.core.data.network
 // as the browser blocks cross-origin requests without CORS support.
 actual val SampleFeeds: List<String> = listOf(
     "https://fragmentedpodcast.com/feed/",
-    "https://feeds.megaphone.fm/replyall",
-    "https://feeds.npr.org/510289/podcast.xml",
-    "https://feeds.99percentinvisible.org/99percentinvisible",
     "https://www.howstuffworks.com/podcasts/stuff-you-should-know.rss",
     "https://rss.art19.com/the-daily",
     "https://rss.art19.com/lisk",
-    "https://omny.fm/shows/silence-is-not-an-option/playlists/podcast.rss",
-    "https://feeds.simplecast.com/7PvD7RPL",
     "https://feeds.buzzsprout.com/1006078.rss",
 )

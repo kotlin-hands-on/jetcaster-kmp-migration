@@ -26,7 +26,7 @@ class EpisodeToPodcast {
     @Embedded
     lateinit var episode: Episode
 
-    @Relation(parentColumn = "podcast_uri", entityColumn = "uri")
+    @Relation(parentColumns = ["podcast_uri"], entityColumns = ["uri"])
     lateinit var _podcasts: List<Podcast>
 
     @get:Ignore
