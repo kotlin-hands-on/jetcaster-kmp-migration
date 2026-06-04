@@ -26,6 +26,7 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.accompanist.adaptive)
     implementation(libs.androidx.window)
 }
 
