@@ -61,14 +61,17 @@ jobs:
       - name: Gradle setup
         uses: ./.github/actions/gradle-setup
 
+      - name: Set Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
+
       - name: Build iOS simulator app
         run: |
           xcodebuild build \
           -project iosApp/JetcasterMigration.xcodeproj \
           -configuration Debug \
-          -destination "platform=iOS Simulator,name=iPhone 17,arch=arm64" \
           -scheme JetcasterMigration \
           -sdk iphonesimulator \
+          -arch arm64 \
           -derivedDataPath ./build \
           -verbose
 
