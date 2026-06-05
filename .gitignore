@@ -34,3 +34,10 @@ captures
 !*.xcodeproj/project.xcworkspace/
 !*.xcworkspace/contents.xcworkspacedata
 **/xcshareddata/WorkspaceSettings.xcsettings
+/node_modules/
+/yarn.lock
+/package.json
+/.claude/
+/.google/
+/.google/
+/.junie

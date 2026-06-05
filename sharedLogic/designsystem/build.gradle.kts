@@ -38,6 +38,11 @@ kotlin {
     // Desktop target (JVM)
     jvm()
 
+    // Browser target (WASM)
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         commonMain.dependencies {
             // Compose Multiplatform dependencies
@@ -63,9 +68,6 @@ kotlin {
 
         androidMain.dependencies {
             implementation(libs.coil.network.okhttp)
-        }
-
-        iosMain.dependencies {
         }
     }
 }

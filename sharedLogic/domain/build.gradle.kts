@@ -44,10 +44,16 @@ kotlin {
     // Desktop target (JVM)
     jvm()
 
+    // Browser target (WASM)
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         commonMain.dependencies {
             implementation(projects.sharedLogic.data)
             implementation(libs.koin.core)
+            implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.datetime)
         }
 
@@ -81,4 +87,5 @@ dependencies {
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspJvm", libs.androidx.room.compiler)
+    add("kspWasmJs", libs.androidx.room.compiler)
 }

@@ -1,8 +1,8 @@
 package com.example.jetcaster.core.data.di
 
 import java.io.File
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import androidx.room3.Room
+import androidx.room3.RoomDatabase
 import com.example.jetcaster.core.data.database.JetcasterDatabase
 
 fun getDatabaseBuilder(): RoomDatabase.Builder<JetcasterDatabase> {

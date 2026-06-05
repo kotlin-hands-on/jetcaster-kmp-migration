@@ -16,7 +16,7 @@
 
 package com.example.jetcaster.core.data.database.dao
 
-import androidx.room.Dao
+import androidx.room3.Dao
 import com.example.jetcaster.core.data.database.model.PodcastCategoryEntry
 
 /**

@@ -16,10 +16,10 @@
 
 package com.example.jetcaster.core.data.database.dao
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Update
+import androidx.room3.Delete
+import androidx.room3.Insert
+import androidx.room3.OnConflictStrategy
+import androidx.room3.Update
 
 /**
  * Base DAO.
