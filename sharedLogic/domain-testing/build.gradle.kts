@@ -22,8 +22,8 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.example.jetcaster.core.domain.testing"
-        compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = libs.versions.minSdk.get().toInt()
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
     jvmToolchain(17)

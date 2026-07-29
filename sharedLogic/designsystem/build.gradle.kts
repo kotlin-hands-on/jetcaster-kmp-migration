@@ -24,8 +24,8 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.example.jetcaster.core.designsystem"
-        compileSdk = libs.versions.compileSdk.get().toInt()
-        minSdk = libs.versions.minSdk.get().toInt()
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         androidResources.enable = true
     }
