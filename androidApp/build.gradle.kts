@@ -31,7 +31,7 @@ dependencies {
 
 android {
     compileSdk =
-        libs.versions.compileSdk
+        libs.versions.android.compileSdk
             .get()
             .toInt()
     namespace = "com.example.jetcaster"
@@ -39,11 +39,11 @@ android {
     defaultConfig {
         applicationId = "com.example.jetcaster"
         minSdk =
-            libs.versions.minSdk
+            libs.versions.android.minSdk
                 .get()
                 .toInt()
         targetSdk =
-            libs.versions.targetSdk
+            libs.versions.android.targetSdk
                 .get()
                 .toInt()
         versionCode = 1
