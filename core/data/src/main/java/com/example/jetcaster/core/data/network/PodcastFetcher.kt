@@ -16,8 +16,6 @@
 
 package com.example.jetcaster.core.data.network
 
-import com.example.jetcaster.core.data.Dispatcher
-import com.example.jetcaster.core.data.JetcasterDispatchers
 import com.example.jetcaster.core.data.database.model.Category
 import com.example.jetcaster.core.data.database.model.Episode
 import com.example.jetcaster.core.data.database.model.Podcast
@@ -30,7 +28,6 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.Locale
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
@@ -44,8 +41,8 @@ import kotlinx.coroutines.withContext
  *
  * @param ioDispatcher [CoroutineDispatcher] to use for running fetch requests.
  */
-class PodcastsFetcher @Inject constructor(
-    @Dispatcher(JetcasterDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
+class PodcastsFetcher(
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     // Create an RSS parser

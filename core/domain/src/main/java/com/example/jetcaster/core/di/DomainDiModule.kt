@@ -16,22 +16,41 @@
 
 package com.example.jetcaster.core.di
 
-import com.example.jetcaster.core.data.Dispatcher
 import com.example.jetcaster.core.data.JetcasterDispatchers
+import com.example.jetcaster.core.data.JetcasterDispatchers.mainDispatcher
+import com.example.jetcaster.core.data.repository.CategoryStore
+import com.example.jetcaster.core.data.repository.EpisodeStore
+import com.example.jetcaster.core.data.repository.PodcastStore
+import com.example.jetcaster.core.domain.FilterableCategoriesUseCase
+import com.example.jetcaster.core.domain.GetLatestFollowedEpisodesUseCase
+import com.example.jetcaster.core.domain.PodcastCategoryFilterUseCase
 import com.example.jetcaster.core.player.EpisodePlayer
 import com.example.jetcaster.core.player.MockEpisodePlayer
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DomainDiModule {
-    @Provides
-    @Singleton
-    fun provideEpisodePlayer(@Dispatcher(JetcasterDispatchers.Main) mainDispatcher: CoroutineDispatcher): EpisodePlayer =
-        MockEpisodePlayer(mainDispatcher)
+val domainModule = module {
+    single<EpisodePlayer> {
+        MockEpisodePlayer(get<CoroutineDispatcher>(mainDispatcher))
+    }
+
+    single {
+        FilterableCategoriesUseCase(
+            categoryStore = get<CategoryStore>(),
+        )
+    }
+
+    single {
+        GetLatestFollowedEpisodesUseCase(
+            episodeStore = get<EpisodeStore>(),
+            podcastStore = get<PodcastStore>(),
+        )
+    }
+
+    single {
+        PodcastCategoryFilterUseCase(
+            categoryStore = get<CategoryStore>(),
+        )
+    }
 }

@@ -20,14 +20,13 @@ import com.example.jetcaster.core.data.repository.CategoryStore
 import com.example.jetcaster.core.model.CategoryInfo
 import com.example.jetcaster.core.model.FilterableCategoriesModel
 import com.example.jetcaster.core.model.asExternalModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 /**
  * Use case for categories that can be used to filter podcasts.
  */
-class FilterableCategoriesUseCase @Inject constructor(private val categoryStore: CategoryStore) {
+class FilterableCategoriesUseCase(private val categoryStore: CategoryStore) {
     /**
      * Created a [FilterableCategoriesModel] from the list of categories in [categoryStore].
      * @param selectedCategory the currently selected category. If null, the first category

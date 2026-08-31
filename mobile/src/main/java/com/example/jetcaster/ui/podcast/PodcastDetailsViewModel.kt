@@ -28,10 +28,6 @@ import com.example.jetcaster.core.model.asDaoModel
 import com.example.jetcaster.core.model.asExternalModel
 import com.example.jetcaster.core.player.EpisodePlayer
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -47,12 +43,11 @@ sealed interface PodcastUiState {
 /**
  * ViewModel that handles the business logic and screen state of the Podcast details screen.
  */
-@HiltViewModel(assistedFactory = PodcastDetailsViewModel.Factory::class)
-class PodcastDetailsViewModel @AssistedInject constructor(
+class PodcastDetailsViewModel (
     private val episodeStore: EpisodeStore,
     private val episodePlayer: EpisodePlayer,
     private val podcastStore: PodcastStore,
-    @Assisted private val podcastUri: String,
+    private val podcastUri: String,
 ) : ViewModel() {
 
     private val decodedPodcastUri = Uri.decode(podcastUri)
@@ -89,8 +84,4 @@ class PodcastDetailsViewModel @AssistedInject constructor(
         }
     }
 
-    @AssistedFactory
-    interface Factory {
-        fun create(podcastUri: String): PodcastDetailsViewModel
-    }
 }

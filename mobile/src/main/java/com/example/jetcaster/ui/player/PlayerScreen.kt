@@ -83,7 +83,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.window.core.layout.WindowSizeClass
 import androidx.window.core.layout.computeWindowSizeClass
 import androidx.window.layout.DisplayFeature
@@ -107,6 +106,7 @@ import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
 import java.time.Duration
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 /**
  * Stateful version of the Podcast player
@@ -116,7 +116,7 @@ fun PlayerScreen(
     windowSizeClass: WindowSizeClass,
     displayFeatures: List<DisplayFeature>,
     onBackPress: () -> Unit,
-    viewModel: PlayerViewModel = hiltViewModel(),
+    viewModel: PlayerViewModel = koinViewModel(),
 ) {
     val uiState = viewModel.uiState
     PlayerScreen(

@@ -17,20 +17,29 @@
 package com.example.jetcaster
 
 import android.app.Application
-import coil.ImageLoader
-import coil.ImageLoaderFactory
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import com.example.jetcaster.core.data.di.dataModule
+import com.example.jetcaster.core.di.domainModule
+import com.example.jetcaster.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 /**
- * Application which sets up our dependency [Graph] with a context.
+ * Application which sets up our dependency injection with Koin.
  */
-@HiltAndroidApp
-class JetcasterApplication :
-    Application(),
-    ImageLoaderFactory {
+class JetcasterApplication : Application() {
+    override fun onCreate() {
+        super.onCreate()
 
-    @Inject lateinit var imageLoader: ImageLoader
-
-    override fun newImageLoader(): ImageLoader = imageLoader
+        // Initialize Koin
+        startKoin {
+            androidLogger()
+            androidContext(this@JetcasterApplication)
+            modules(
+                dataModule,
+                domainModule,
+                viewModelModule,
+            )
+        }
+    }
 }

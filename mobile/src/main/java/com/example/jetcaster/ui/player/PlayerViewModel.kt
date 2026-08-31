@@ -28,9 +28,7 @@ import com.example.jetcaster.core.player.EpisodePlayer
 import com.example.jetcaster.core.player.EpisodePlayerState
 import com.example.jetcaster.core.player.model.toPlayerEpisode
 import com.example.jetcaster.ui.Screen
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Duration
-import javax.inject.Inject
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
@@ -42,8 +40,7 @@ data class PlayerUiState(val episodePlayerState: EpisodePlayerState = EpisodePla
  * ViewModel that handles the business logic and screen state of the Player screen
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class PlayerViewModel @Inject constructor(
+class PlayerViewModel (
     episodeStore: EpisodeStore,
     private val episodePlayer: EpisodePlayer,
     savedStateHandle: SavedStateHandle,

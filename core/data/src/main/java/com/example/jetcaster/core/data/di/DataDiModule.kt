@@ -16,128 +16,100 @@
 
 package com.example.jetcaster.core.data.di
 
-import android.content.Context
 import androidx.room.Room
 import coil.ImageLoader
+import coil.request.CachePolicy
 import com.example.jetcaster.core.data.BuildConfig
-import com.example.jetcaster.core.data.Dispatcher
 import com.example.jetcaster.core.data.JetcasterDispatchers
+import com.example.jetcaster.core.data.JetcasterDispatchers.ioDispatcher
+import com.example.jetcaster.core.data.JetcasterDispatchers.mainDispatcher
 import com.example.jetcaster.core.data.database.JetcasterDatabase
-import com.example.jetcaster.core.data.database.dao.CategoriesDao
-import com.example.jetcaster.core.data.database.dao.EpisodesDao
-import com.example.jetcaster.core.data.database.dao.PodcastCategoryEntryDao
-import com.example.jetcaster.core.data.database.dao.PodcastFollowedEntryDao
-import com.example.jetcaster.core.data.database.dao.PodcastsDao
 import com.example.jetcaster.core.data.database.dao.TransactionRunner
+import com.example.jetcaster.core.data.network.PodcastsFetcher
 import com.example.jetcaster.core.data.repository.CategoryStore
 import com.example.jetcaster.core.data.repository.EpisodeStore
 import com.example.jetcaster.core.data.repository.LocalCategoryStore
 import com.example.jetcaster.core.data.repository.LocalEpisodeStore
 import com.example.jetcaster.core.data.repository.LocalPodcastStore
 import com.example.jetcaster.core.data.repository.PodcastStore
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
+import com.example.jetcaster.core.data.repository.PodcastsRepository
 import java.io.File
-import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.LoggingEventListener
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DataDiModule {
+val dataModule = module {
+    single {
+        OkHttpClient.Builder()
+            .cache(Cache(File(androidContext().cacheDir, "http_cache"), (20 * 1024 * 1024).toLong()))
+            .apply {
+                if (BuildConfig.DEBUG) eventListenerFactory(LoggingEventListener.Factory())
+            }
+            .build()
+    }
 
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(@ApplicationContext context: Context): OkHttpClient = OkHttpClient.Builder()
-        .cache(Cache(File(context.cacheDir, "http_cache"), (20 * 1024 * 1024).toLong()))
-        .apply {
-            if (BuildConfig.DEBUG) eventListenerFactory(LoggingEventListener.Factory())
-        }
-        .build()
-
-    @Provides
-    @Singleton
-    fun provideDatabase(@ApplicationContext context: Context): JetcasterDatabase =
-        Room.databaseBuilder(context, JetcasterDatabase::class.java, "data.db")
+    single {
+        Room.databaseBuilder(androidContext(), JetcasterDatabase::class.java, "data.db")
             // This is not recommended for normal apps, but the goal of this sample isn't to
             // showcase all of Room.
             .fallbackToDestructiveMigration()
             .build()
+    }
+    single {
+        ImageLoader.Builder(androidContext())
+            // Disable `Cache-Control` header support as some podcast images disable disk caching.
+            .networkCachePolicy(CachePolicy.DISABLED)
+            .build()
+    }
 
-    @Provides
-    @Singleton
-    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader = ImageLoader.Builder(context)
-        // Disable `Cache-Control` header support as some podcast images disable disk caching.
-        .respectCacheHeaders(false)
-        .build()
+    single { get<JetcasterDatabase>().categoriesDao() }
+    single { get<JetcasterDatabase>().podcastCategoryEntryDao() }
+    single { get<JetcasterDatabase>().podcastsDao() }
+    single { get<JetcasterDatabase>().episodesDao() }
+    single { get<JetcasterDatabase>().podcastFollowedEntryDao() }
+    single<TransactionRunner> { get<JetcasterDatabase>().transactionRunnerDao() }
 
-    @Provides
-    @Singleton
-    fun provideCategoriesDao(database: JetcasterDatabase): CategoriesDao = database.categoriesDao()
+    single<CoroutineDispatcher>(ioDispatcher) { Dispatchers.IO }
+    single<CoroutineDispatcher>(mainDispatcher) { Dispatchers.Main }
 
-    @Provides
-    @Singleton
-    fun providePodcastCategoryEntryDao(database: JetcasterDatabase): PodcastCategoryEntryDao = database.podcastCategoryEntryDao()
+    single<EpisodeStore> { LocalEpisodeStore(get()) }
 
-    @Provides
-    @Singleton
-    fun providePodcastsDao(database: JetcasterDatabase): PodcastsDao = database.podcastsDao()
+    single<PodcastStore> {
+        LocalPodcastStore(
+            podcastDao = get(),
+            podcastFollowedEntryDao = get(),
+            transactionRunner = get(),
+        )
+    }
 
-    @Provides
-    @Singleton
-    fun provideEpisodesDao(database: JetcasterDatabase): EpisodesDao = database.episodesDao()
+    single<CategoryStore> {
+        LocalCategoryStore(
+            episodesDao = get(),
+            podcastsDao = get(),
+            categoriesDao = get(),
+            categoryEntryDao = get(),
+        )
+    }
 
-    @Provides
-    @Singleton
-    fun providePodcastFollowedEntryDao(database: JetcasterDatabase): PodcastFollowedEntryDao = database.podcastFollowedEntryDao()
+    single {
+        PodcastsFetcher(
+            ioDispatcher = get<CoroutineDispatcher>(ioDispatcher),
+            )
+    }
 
-    @Provides
-    @Singleton
-    fun provideTransactionRunner(database: JetcasterDatabase): TransactionRunner = database.transactionRunnerDao()
-
-    @Provides
-    @Dispatcher(JetcasterDispatchers.IO)
-    @Singleton
-    fun provideIODispatcher(): CoroutineDispatcher = Dispatchers.IO
-
-    @Provides
-    @Dispatcher(JetcasterDispatchers.Main)
-    @Singleton
-    fun provideMainDispatcher(): CoroutineDispatcher = Dispatchers.Main
-
-    @Provides
-    @Singleton
-    fun provideEpisodeStore(episodeDao: EpisodesDao): EpisodeStore = LocalEpisodeStore(episodeDao)
-
-    @Provides
-    @Singleton
-    fun providePodcastStore(
-        podcastDao: PodcastsDao,
-        podcastFollowedEntryDao: PodcastFollowedEntryDao,
-        transactionRunner: TransactionRunner,
-    ): PodcastStore = LocalPodcastStore(
-        podcastDao = podcastDao,
-        podcastFollowedEntryDao = podcastFollowedEntryDao,
-        transactionRunner = transactionRunner,
-    )
-
-    @Provides
-    @Singleton
-    fun provideCategoryStore(
-        categoriesDao: CategoriesDao,
-        podcastCategoryEntryDao: PodcastCategoryEntryDao,
-        podcastDao: PodcastsDao,
-        episodeDao: EpisodesDao,
-    ): CategoryStore = LocalCategoryStore(
-        episodesDao = episodeDao,
-        podcastsDao = podcastDao,
-        categoriesDao = categoriesDao,
-        categoryEntryDao = podcastCategoryEntryDao,
-    )
+    single {
+        PodcastsRepository(
+            podcastsFetcher = get<PodcastsFetcher>(),
+            podcastStore = get<PodcastStore>(),
+            episodeStore = get<EpisodeStore>(),
+            categoryStore = get<CategoryStore>(),
+            transactionRunner = get<TransactionRunner>(),
+            mainDispatcher = get<CoroutineDispatcher>(mainDispatcher),
+            )
+    }
 }

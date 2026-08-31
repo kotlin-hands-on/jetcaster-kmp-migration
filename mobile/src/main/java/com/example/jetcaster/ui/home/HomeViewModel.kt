@@ -36,8 +36,6 @@ import com.example.jetcaster.core.model.asExternalModel
 import com.example.jetcaster.core.model.asPodcastToEpisodeInfo
 import com.example.jetcaster.core.player.EpisodePlayer
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -51,8 +49,7 @@ import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalCoroutinesApi::class)
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel (
     private val podcastsRepository: PodcastsRepository,
     private val podcastStore: PodcastStore,
     private val episodeStore: EpisodeStore,

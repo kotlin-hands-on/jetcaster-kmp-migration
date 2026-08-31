@@ -20,7 +20,6 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
 }
 
@@ -124,9 +123,10 @@ dependencies {
     implementation(libs.androidx.palette)
 
     // Dependency injection
-    implementation(libs.androidx.hilt.navigation.compose)
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.compose.viewmodel)
+    implementation(libs.koin.androidx.compose.navigation)
 
     // Compose
     implementation(libs.androidx.activity.compose)

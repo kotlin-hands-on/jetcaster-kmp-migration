@@ -90,7 +90,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
 import com.example.jetcaster.R
@@ -120,6 +119,8 @@ import java.time.OffsetDateTime
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private fun <T> ThreePaneScaffoldNavigator<T>.isMainPaneHidden(): Boolean =
@@ -182,7 +183,7 @@ private fun getExcludedVerticalBounds(posture: Posture, hingePolicy: HingePolicy
 }
 
 @Composable
-fun MainScreen(windowSizeClass: WindowSizeClass, navigateToPlayer: (EpisodeInfo) -> Unit, viewModel: HomeViewModel = hiltViewModel()) {
+fun MainScreen(windowSizeClass: WindowSizeClass, navigateToPlayer: (EpisodeInfo) -> Unit, viewModel: HomeViewModel = koinViewModel()) {
     val homeScreenUiState by viewModel.state.collectAsStateWithLifecycle()
     val uiState = homeScreenUiState
     Box {
@@ -232,8 +233,8 @@ private fun HomeScreenReady(
     uiState: HomeScreenUiState,
     windowSizeClass: WindowSizeClass,
     navigateToPlayer: (EpisodeInfo) -> Unit,
-    viewModel: HomeViewModel = hiltViewModel(),
-) {
+    viewModel: HomeViewModel = koinViewModel(),
+    ) {
     val navigator = rememberSupportingPaneScaffoldNavigator<String>(
         scaffoldDirective = calculateScaffoldDirective(currentWindowAdaptiveInfo()),
     )
@@ -272,12 +273,10 @@ private fun HomeScreenReady(
             supportingPane = {
                 val podcastUri = navigator.currentDestination?.contentKey
                 if (!podcastUri.isNullOrEmpty()) {
-                    val podcastDetailsViewModel =
-                        hiltViewModel<PodcastDetailsViewModel, PodcastDetailsViewModel.Factory>(
-                            key = podcastUri,
-                        ) {
-                            it.create(podcastUri)
-                        }
+                    val podcastDetailsViewModel = koinViewModel<PodcastDetailsViewModel>(
+                        key = podcastUri,
+                        parameters = { parametersOf(podcastUri) }
+                    )
                     PodcastDetailsScreen(
                         viewModel = podcastDetailsViewModel,
                         navigateToPlayer = navigateToPlayer,
