@@ -14,68 +14,61 @@
  * limitations under the License.
  */
 
-
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
-    }
-}
+    android {
+        namespace = "com.example.jetcaster.core.domain"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
-android {
-    compileSdk =
-        libs.versions.android.compileSdk
-            .get()
-            .toInt()
-    namespace = "com.example.jetcaster.core.domain"
+        withHostTestBuilder {
+        }
 
-    defaultConfig {
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro",
-            )
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }.configure {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget("17")
+
+    jvmToolchain(17)
+
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Desktop target (JVM)
+    jvm()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(projects.core.data)
+            implementation(libs.koin.core)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
+        }
+
+        commonTest.dependencies {
+            implementation(projects.core.dataTesting)
+            implementation(libs.kotlinx.test.core)
+            implementation(libs.kotlinx.coroutines.test)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.koin.android)
+        }
+
+        getByName("androidDeviceTest").dependencies {
+            implementation(libs.androidx.test.runner)
+            implementation(libs.androidx.test.ext.junit)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
-dependencies {
-    coreLibraryDesugaring(libs.core.jdk.desugaring)
-    implementation(projects.core.data)
-    implementation(projects.core.dataTesting)
-
-    // Dependency injection
-    implementation(libs.koin.android)
-
-    // Testing
-    testImplementation(libs.kotlinx.test.core)
-    testImplementation(libs.kotlinx.test.junit)
-    testImplementation(libs.kotlinx.test.annotations.common)
-    testImplementation(libs.kotlinx.coroutines.test)
 }
