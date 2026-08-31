@@ -20,8 +20,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
+import androidx.navigation.compose.composable
+import androidx.window.layout.DisplayFeature
+import com.example.jetcaster.core.data.network.OnlineChecker
+import com.example.jetcaster.ui.player.PlayerScreen
 import com.example.jetcaster.ui.theme.JetcasterTheme
 import com.google.accompanist.adaptive.calculateDisplayFeatures
+import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,13 +37,31 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            val displayFeatures = calculateDisplayFeatures(this)
-
-            JetcasterTheme {
-                JetcasterApp(
-                    displayFeatures,
-                )
+            val adaptiveInfo = currentWindowAdaptiveInfo()
+            val appState = rememberJetcasterAppState(onlineChecker = koinInject<OnlineChecker>())
+            CompositionLocalProvider(LocalDisplayFeatures provides calculateDisplayFeatures(this)) {
+                JetcasterTheme {
+                    JetcasterApp(
+                        adaptiveInfo = adaptiveInfo,
+                        appState = appState,
+                        buildNavGraph = {
+                            composable(Screen.Player.route) {
+                                CompositionLocalProvider(
+                                    LocalAnimatedVisibilityScope provides this,
+                                ) {
+                                    PlayerScreen(
+                                        windowSizeClass = adaptiveInfo.windowSizeClass,
+                                        onBackPress = appState::navigateBack,
+                                    )
+                                }
+                            }
+                        },
+                    )
+                }
             }
         }
     }
 }
+
+// TODO this needs to be abstracted for CMP
+val LocalDisplayFeatures = compositionLocalOf<List<DisplayFeature>> { emptyList() }

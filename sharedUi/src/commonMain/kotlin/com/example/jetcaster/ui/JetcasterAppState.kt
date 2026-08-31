@@ -16,25 +16,20 @@
 
 package com.example.jetcaster.ui
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.net.Uri
-import android.os.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.jetcaster.core.data.network.OnlineChecker
+import com.eygraber.uri.Uri
 
 /**
- * List of screens for [JetcasterApp]
+ * List of screens for [com.example.jetcaster.ui.JetcasterApp]
  */
 sealed class Screen(val route: String) {
     object Home : Screen("home")
@@ -53,17 +48,20 @@ sealed class Screen(val route: String) {
 }
 
 @Composable
-fun rememberJetcasterAppState(navController: NavHostController = rememberNavController(), context: Context = LocalContext.current) =
-    remember(navController, context) {
-        JetcasterAppState(navController, context)
+fun rememberJetcasterAppState(navController: NavHostController = rememberNavController(), onlineChecker: OnlineChecker) =
+    remember(navController, onlineChecker) {
+        JetcasterAppState(navController, onlineChecker)
     }
 
-class JetcasterAppState(val navController: NavHostController, private val context: Context) {
-    var isOnline by mutableStateOf(checkIfOnline())
+class JetcasterAppState(
+    val navController: NavHostController,
+    private val onlineChecker: OnlineChecker,
+) {
+    var isOnline by mutableStateOf(onlineChecker.checkIfOnline())
         private set
 
     fun refreshOnline() {
-        isOnline = checkIfOnline()
+        isOnline = onlineChecker.checkIfOnline()
     }
 
     fun navigateToPlayer(episodeUri: String, from: NavBackStackEntry) {
@@ -83,19 +81,6 @@ class JetcasterAppState(val navController: NavHostController, private val contex
 
     fun navigateBack() {
         navController.popBackStack()
-    }
-
-    @Suppress("DEPRECATION")
-    private fun checkIfOnline(): Boolean {
-        val cm = getSystemService(context, ConnectivityManager::class.java)
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val capabilities = cm?.getNetworkCapabilities(cm.activeNetwork) ?: return false
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-        } else {
-            cm?.activeNetworkInfo?.isConnectedOrConnecting == true
-        }
     }
 }
 

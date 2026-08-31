@@ -94,6 +94,7 @@ import com.example.jetcaster.core.designsystem.component.HtmlTextContainer
 import com.example.jetcaster.core.designsystem.component.ImageBackgroundColorScrim
 import com.example.jetcaster.core.designsystem.component.PodcastImage
 import com.example.jetcaster.ui.LocalAnimatedVisibilityScope
+import com.example.jetcaster.ui.LocalDisplayFeatures
 import com.example.jetcaster.ui.LocalSharedTransitionScope
 import com.example.jetcaster.ui.theme.JetcasterTheme
 import com.example.jetcaster.ui.tooling.DevicePreviews
@@ -117,7 +118,6 @@ import kotlin.time.DurationUnit
 @Composable
 fun PlayerScreen(
     windowSizeClass: WindowSizeClass,
-    displayFeatures: List<DisplayFeature>,
     onBackPress: () -> Unit,
     viewModel: PlayerViewModel = koinViewModel(),
 ) {
@@ -125,7 +125,6 @@ fun PlayerScreen(
     PlayerScreen(
         uiState = uiState,
         windowSizeClass = windowSizeClass,
-        displayFeatures = displayFeatures,
         onBackPress = onBackPress,
         onAddToQueue = viewModel::onAddToQueue,
         onStop = viewModel::onStop,
@@ -149,7 +148,6 @@ fun PlayerScreen(
 private fun PlayerScreen(
     uiState: PlayerUiState,
     windowSizeClass: WindowSizeClass,
-    displayFeatures: List<DisplayFeature>,
     onBackPress: () -> Unit,
     onAddToQueue: () -> Unit,
     onStop: () -> Unit,
@@ -175,7 +173,6 @@ private fun PlayerScreen(
             PlayerContentWithBackground(
                 uiState = uiState,
                 windowSizeClass = windowSizeClass,
-                displayFeatures = displayFeatures,
                 onBackPress = onBackPress,
                 onAddToQueue = {
                     coroutineScope.launch {
@@ -205,7 +202,6 @@ private fun PlayerBackground(episode: PlayerEpisode?, modifier: Modifier) {
 fun PlayerContentWithBackground(
     uiState: PlayerUiState,
     windowSizeClass: WindowSizeClass,
-    displayFeatures: List<DisplayFeature>,
     onBackPress: () -> Unit,
     onAddToQueue: () -> Unit,
     playerControlActions: PlayerControlActions,
@@ -222,7 +218,6 @@ fun PlayerContentWithBackground(
         PlayerContent(
             uiState = uiState,
             windowSizeClass = windowSizeClass,
-            displayFeatures = displayFeatures,
             onBackPress = onBackPress,
             onAddToQueue = onAddToQueue,
             playerControlActions = playerControlActions,
@@ -248,12 +243,14 @@ data class PlayerControlActions(
 fun PlayerContent(
     uiState: PlayerUiState,
     windowSizeClass: WindowSizeClass,
-    displayFeatures: List<DisplayFeature>,
     onBackPress: () -> Unit,
     onAddToQueue: () -> Unit,
     playerControlActions: PlayerControlActions,
     modifier: Modifier = Modifier,
 ) {
+    // TODO this needs to be abstracted away
+    val displayFeatures = LocalDisplayFeatures.current
+
     val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
 
     // Use a two pane layout if there is a fold impacting layout (meaning it is separating
@@ -269,11 +266,11 @@ fun PlayerContent(
         // or we have an impactful horizontal fold. Otherwise, we'll use a horizontal strategy.
         val usingVerticalStrategy =
             isTableTopPosture(foldingFeature) ||
-                (
-                    isSeparatingPosture(foldingFeature) &&
-                        foldingFeature.orientation ==
-                        FoldingFeature.Orientation.HORIZONTAL
-                    )
+                    (
+                            isSeparatingPosture(foldingFeature) &&
+                                    foldingFeature.orientation ==
+                                    FoldingFeature.Orientation.HORIZONTAL
+                            )
 
         if (usingVerticalStrategy) {
             TwoPane(
@@ -928,7 +925,6 @@ fun PlayerScreenPreview() {
                         ),
                     ),
                 ),
-                displayFeatures = emptyList(),
                 windowSizeClass = WindowSizeClass.BREAKPOINTS_V1.computeWindowSizeClass(maxWidth.value, maxHeight.value),
                 onBackPress = { },
                 onAddToQueue = {},

@@ -18,31 +18,30 @@
 
 package com.example.jetcaster.ui
 
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.scaleOut
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.window.layout.DisplayFeature
 import com.example.jetcaster.R
 import com.example.jetcaster.ui.home.MainScreen
-import com.example.jetcaster.ui.player.PlayerScreen
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
-fun JetcasterApp(displayFeatures: List<DisplayFeature>, appState: JetcasterAppState = rememberJetcasterAppState()) {
-    val adaptiveInfo = currentWindowAdaptiveInfo()
+fun JetcasterApp(
+    adaptiveInfo: WindowAdaptiveInfo,
+    appState: JetcasterAppState,
+    buildNavGraph: NavGraphBuilder.() -> Unit = {}, // TODO temporary builder to ease migration to KMP
+) {
     if (appState.isOnline) {
         SharedTransitionLayout {
             CompositionLocalProvider(
@@ -66,17 +65,8 @@ fun JetcasterApp(displayFeatures: List<DisplayFeature>, appState: JetcasterAppSt
                             )
                         }
                     }
-                    composable(Screen.Player.route) {
-                        CompositionLocalProvider(
-                            LocalAnimatedVisibilityScope provides this,
-                        ) {
-                            PlayerScreen(
-                                windowSizeClass = adaptiveInfo.windowSizeClass,
-                                displayFeatures = displayFeatures,
-                                onBackPress = appState::navigateBack,
-                            )
-                        }
-                    }
+
+                    buildNavGraph()
                 }
             }
         }
