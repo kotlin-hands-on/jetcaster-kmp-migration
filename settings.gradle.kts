@@ -31,6 +31,7 @@ rootProject.name = "Jetcaster"
 
 include(
     ":androidApp",
+    ":desktopApp",
     ":sharedUi",
     ":sharedLogic:data",
     ":sharedLogic:data-testing",
