@@ -43,7 +43,7 @@ import com.example.jetcaster.core.model.FilterableCategoriesModel
 import com.example.jetcaster.core.model.PodcastCategoryFilterResult
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import com.example.jetcaster.designsystem.theme.Keyline1
+import com.example.jetcaster.core.designsystem.theme.Keyline1
 import com.example.jetcaster.ui.home.category.podcastCategory
 import com.example.jetcaster.util.fullWidthItem
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jetcaster.designsystem.theme
+package com.example.jetcaster.core.designsystem.theme
 import androidx.compose.ui.graphics.Color
 
 val primaryLight = Color(0xFFFF792C)

@@ -14,68 +14,61 @@
  * limitations under the License.
  */
 
-
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
 }
 
-// TODO(chris): Set up convention plugin
-android {
-    compileSdk =
-        libs.versions.android.compileSdk
-            .get()
-            .toInt()
-    namespace = "com.example.jetcaster.core.designsystem"
+kotlin {
+    android {
+        namespace = "com.example.jetcaster.core.designsystem"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
-    defaultConfig {
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
-        vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
+        androidResources.enable = true
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+    jvmToolchain(17)
+
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Desktop target (JVM)
+    jvm()
+
+    sourceSets {
+        commonMain.dependencies {
+            // Compose Multiplatform dependencies
+            implementation(libs.compose.runtime)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material3)
+            implementation(libs.compose.ui)
+            implementation(libs.compose.components.resources)
+
+            // Image loading
+            implementation(libs.coil.kt.compose)
+
+            // Dependency injection
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+
+            // HTML text converter
+            implementation(libs.html.converter)
+
+            // Dates and times
+            implementation(libs.kotlinx.datetime)
         }
-    }
 
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget("17")
+        androidMain.dependencies {
+            implementation(libs.coil.network.okhttp)
         }
     }
 }
 
-dependencies {
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-    implementation(libs.androidx.compose.foundation)
-    implementation(libs.androidx.compose.material3)
-    implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.text)
-    implementation(libs.coil.kt.compose)
-    implementation(libs.coil.network.okhttp)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-
-    implementation(libs.html.converter)
+compose.resources {
+    publicResClass = true
+    packageOfResClass = "com.example.jetcaster.core.designsystem"
+    generateResClass = auto
 }

@@ -74,7 +74,7 @@ import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
 import com.example.jetcaster.designsystem.component.PodcastImage
-import com.example.jetcaster.designsystem.theme.Keyline1
+import com.example.jetcaster.core.designsystem.theme.Keyline1
 import com.example.jetcaster.ui.shared.EpisodeListItem
 import com.example.jetcaster.ui.shared.Loading
 import com.example.jetcaster.ui.tooling.DevicePreviews
