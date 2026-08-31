@@ -21,9 +21,9 @@ import com.example.jetcaster.core.data.testing.repository.TestCategoryStore
 import com.example.jetcaster.core.model.asExternalModel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class FilterableCategoriesUseCaseTest {
 
@@ -39,7 +39,7 @@ class FilterableCategoriesUseCaseTest {
         categoryStore = categoriesStore,
     )
 
-    @Before
+    @BeforeTest
     fun setUp() {
         categoriesStore.setCategories(testCategories)
     }

@@ -23,8 +23,8 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertTrue
-import org.junit.Test
+import kotlin.test.Test
+import kotlin.test.assertTrue
 
 class GetLatestFollowedEpisodesUseCaseTest {
 

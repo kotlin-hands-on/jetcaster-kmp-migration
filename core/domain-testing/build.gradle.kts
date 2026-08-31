@@ -63,7 +63,9 @@ dependencies {
 
     coreLibraryDesugaring(libs.core.jdk.desugaring)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.test.core)
+    testImplementation(libs.kotlinx.test.junit)
+    testImplementation(libs.kotlinx.test.annotations.common)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.androidx.test.espresso.core)
 }
