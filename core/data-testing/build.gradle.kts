@@ -22,18 +22,17 @@ plugins {
 }
 
 android {
-    namespace = "com.example.jetcaster.core.data.testing"
     compileSdk =
-        libs.versions.compileSdk
+        libs.versions.android.compileSdk
             .get()
             .toInt()
+    namespace = "com.example.jetcaster.core.data.testing"
 
     defaultConfig {
         minSdk =
-            libs.versions.minSdk
+            libs.versions.android.minSdk
                 .get()
                 .toInt()
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }

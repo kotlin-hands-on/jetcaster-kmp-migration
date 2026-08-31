@@ -1,7 +1,7 @@
 # Gradle
 .gradle
 build/
-
+.idea
 captures
 
 /local.properties
@@ -17,9 +17,28 @@ captures
 /.idea/jarRepositories.xml
 gradle.xml
 *.iml
-
-# General
+.kotlin
+.gradle
+**/build/
+xcuserdata
+!src/**/build/
+local.properties
+.idea
 .DS_Store
+captures
 .externalNativeBuild
 .kotlin/
-.idea
+.cxx
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcodeproj/project.xcworkspace/
+!*.xcworkspace/contents.xcworkspacedata
+**/xcshareddata/WorkspaceSettings.xcsettings
+/node_modules/
+/yarn.lock
+/package.json
+/.claude/
+/.google/
+/.google/
+/.junie

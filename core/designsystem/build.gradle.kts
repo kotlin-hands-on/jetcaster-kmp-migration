@@ -19,20 +19,20 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
-    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 // TODO(chris): Set up convention plugin
 android {
-    namespace = "com.example.jetcaster.core.designsystem"
     compileSdk =
-        libs.versions.compileSdk
+        libs.versions.android.compileSdk
             .get()
             .toInt()
+    namespace = "com.example.jetcaster.core.designsystem"
 
     defaultConfig {
         minSdk =
-            libs.versions.minSdk
+            libs.versions.android.minSdk
                 .get()
                 .toInt()
         vectorDrawables.useSupportLibrary = true

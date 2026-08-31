@@ -21,12 +21,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
-    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
 }
 
 android {
     compileSdk =
-        libs.versions.compileSdk
+        libs.versions.android.compileSdk
             .get()
             .toInt()
     namespace = "com.example.jetcaster"
@@ -34,11 +34,11 @@ android {
     defaultConfig {
         applicationId = "com.example.jetcaster"
         minSdk =
-            libs.versions.minSdk
+            libs.versions.android.minSdk
                 .get()
                 .toInt()
         targetSdk =
-            libs.versions.targetSdk
+            libs.versions.android.targetSdk
                 .get()
                 .toInt()
         versionCode = 1
@@ -51,13 +51,16 @@ android {
         val userKeystore = File(System.getProperty("user.home"), ".android/debug.keystore")
         val localKeystore = rootProject.file("debug_2.keystore")
         val hasKeyInfo = userKeystore.exists()
-        create("release") {
-            // get from env variables
-            storeFile = if (hasKeyInfo) userKeystore else localKeystore
-            storePassword = if (hasKeyInfo) "android" else System.getenv("compose_store_password")
-            keyAlias = if (hasKeyInfo) "androiddebugkey" else System.getenv("compose_key_alias")
-            keyPassword = if (hasKeyInfo) "android" else System.getenv("compose_key_password")
-        }
+        create(
+            "release",
+            Action {
+                // get from env variables
+                storeFile = if (hasKeyInfo) userKeystore else localKeystore
+                storePassword = if (hasKeyInfo) "android" else System.getenv("compose_store_password")
+                keyAlias = if (hasKeyInfo) "androiddebugkey" else System.getenv("compose_key_alias")
+                keyPassword = if (hasKeyInfo) "android" else System.getenv("compose_key_password")
+            },
+        )
     }
 
     buildTypes {
@@ -151,7 +154,6 @@ dependencies {
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
     implementation(projects.core.domain)
-    implementation(projects.glancewidget)
     implementation(projects.core.domainTesting)
 
     coreLibraryDesugaring(libs.core.jdk.desugaring)
