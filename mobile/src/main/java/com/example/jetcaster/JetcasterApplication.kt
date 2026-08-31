@@ -18,6 +18,7 @@ package com.example.jetcaster
 
 import android.app.Application
 import com.example.jetcaster.core.data.di.dataModule
+import com.example.jetcaster.core.data.di.otherModule
 import com.example.jetcaster.core.di.domainModule
 import com.example.jetcaster.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -37,6 +38,7 @@ class JetcasterApplication : Application() {
             androidContext(this@JetcasterApplication)
             modules(
                 dataModule,
+                otherModule,
                 domainModule,
                 viewModelModule,
             )

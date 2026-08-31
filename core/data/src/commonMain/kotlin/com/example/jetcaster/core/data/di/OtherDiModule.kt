@@ -1,0 +1,93 @@
+/*
+ * Copyright 2024 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.example.jetcaster.core.data.di
+
+import androidx.room3.immediateTransaction
+import androidx.room3.useWriterConnection
+import com.example.jetcaster.core.data.JetcasterDispatchers.ioDispatcher
+import com.example.jetcaster.core.data.JetcasterDispatchers.mainDispatcher
+import com.example.jetcaster.core.data.database.JetcasterDatabase
+import com.example.jetcaster.core.data.database.dao.TransactionRunner
+import com.example.jetcaster.core.data.network.PodcastsFetcher
+import com.example.jetcaster.core.data.repository.CategoryStore
+import com.example.jetcaster.core.data.repository.EpisodeStore
+import com.example.jetcaster.core.data.repository.LocalCategoryStore
+import com.example.jetcaster.core.data.repository.LocalEpisodeStore
+import com.example.jetcaster.core.data.repository.LocalPodcastStore
+import com.example.jetcaster.core.data.repository.PodcastStore
+import com.example.jetcaster.core.data.repository.PodcastsRepository
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
+import org.koin.dsl.module
+
+// TODO we should name this module properly
+val otherModule = module {
+    single { get<JetcasterDatabase>().categoriesDao() }
+    single { get<JetcasterDatabase>().podcastCategoryEntryDao() }
+    single { get<JetcasterDatabase>().podcastsDao() }
+    single { get<JetcasterDatabase>().episodesDao() }
+    single { get<JetcasterDatabase>().podcastFollowedEntryDao() }
+
+    factory<TransactionRunner> {
+        TransactionRunner { tx ->
+            // TODO is this the 1:1 mapping?
+            get<JetcasterDatabase>().useWriterConnection {
+                it.immediateTransaction { tx() }
+            }
+        }
+    }
+
+    single<CoroutineDispatcher>(ioDispatcher) { Dispatchers.IO }
+    single<CoroutineDispatcher>(mainDispatcher) { Dispatchers.Main }
+
+    single<EpisodeStore> { LocalEpisodeStore(get()) }
+
+    single<PodcastStore> {
+        LocalPodcastStore(
+            podcastDao = get(),
+            podcastFollowedEntryDao = get(),
+            transactionRunner = get(),
+        )
+    }
+
+    single<CategoryStore> {
+        LocalCategoryStore(
+            episodesDao = get(),
+            podcastsDao = get(),
+            categoriesDao = get(),
+            categoryEntryDao = get(),
+        )
+    }
+
+    single {
+        PodcastsFetcher(
+            ioDispatcher = get<CoroutineDispatcher>(ioDispatcher),
+        )
+    }
+
+    single {
+        PodcastsRepository(
+            podcastsFetcher = get<PodcastsFetcher>(),
+            podcastStore = get<PodcastStore>(),
+            episodeStore = get<EpisodeStore>(),
+            categoryStore = get<CategoryStore>(),
+            transactionRunner = get<TransactionRunner>(),
+            mainDispatcher = get<CoroutineDispatcher>(mainDispatcher),
+        )
+    }
+}

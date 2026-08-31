@@ -40,7 +40,6 @@ fun PodcastImage(
     // TODO: Remove the nested component modifier when shared elements are applied to entire app
     imageModifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Crop,
-    placeholderBrush: Brush = thumbnailPlaceholderDefaultBrush(),
 ) {
     if (LocalInspectionMode.current) {
         Box(modifier = modifier.background(MaterialTheme.colorScheme.primary))

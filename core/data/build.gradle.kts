@@ -14,91 +14,69 @@
  * limitations under the License.
  */
 
-
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.androidx.room)
     alias(libs.plugins.ksp)
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+    android {
+        namespace = "com.example.jetcaster.core.data"
+        compileSdk = libs.versions.android.compileSdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+
+    jvmToolchain(17)
+
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Desktop target (JVM)
+    jvm()
+
+    sourceSets {
+        commonMain.dependencies {
+            // We need @Immutable annotations here
+            implementation(libs.androidx.compose.runtime.annotation)
+
+            // Dependency injection
+            implementation(libs.koin.core)
+
+            // Database
+            implementation(libs.androidx.room.runtime)
+
+            // RSS Parser library
+            implementation(libs.rssparser)
+            implementation(libs.kotlinx.coroutines.core)
+
+            // Dates and times
+            implementation(libs.kotlinx.datetime)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.kotlinx.coroutines.android)
+            implementation(libs.androidx.sqlite.bundled)
+        }
+
+        jvmMain.dependencies {
+            implementation(libs.androidx.sqlite.bundled)
+        }
+
+        iosMain.dependencies {
+            implementation(libs.androidx.sqlite.bundled)
+        }
     }
 }
 
-android {
-    compileSdk =
-        libs.versions.android.compileSdk
-            .get()
-            .toInt()
-    namespace = "com.example.jetcaster.core.data"
-
-    defaultConfig {
-        minSdk =
-            libs.versions.android.minSdk
-                .get()
-                .toInt()
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildFeatures {
-        buildConfig = true
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        isCoreLibraryDesugaringEnabled = true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget("17")
-        }
-    }
+room3 {
+    schemaDirectory("$projectDir/schemas")
 }
+
 dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.compose.runtime)
-
-    implementation(libs.kotlinx.datetime)
-
-    // Image loading
-    implementation(libs.coil.kt.compose)
-    implementation(libs.coil.network.ktor3)
-
-    // Compose
-    val composeBom = platform(libs.androidx.compose.bom)
-    implementation(composeBom)
-
-    // Dependency injection
-    implementation(libs.koin.android)
-
-    // Networking
-    implementation(libs.okhttp3)
-    implementation(libs.okhttp.logging)
-
-    // Database
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
-    ksp(libs.androidx.room.compiler)
-
-    implementation(libs.rssparser)
-
-    coreLibraryDesugaring(libs.core.jdk.desugaring)
-
-    // Testing
-    testImplementation(libs.kotlinx.test.core)
-    testImplementation(libs.kotlinx.test.junit)
-    testImplementation(libs.kotlinx.test.annotations.common)
-    testImplementation(libs.kotlinx.coroutines.test)
+    add("kspAndroid", libs.androidx.room.compiler)
+    add("kspJvm", libs.androidx.room.compiler)
+    add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
 }

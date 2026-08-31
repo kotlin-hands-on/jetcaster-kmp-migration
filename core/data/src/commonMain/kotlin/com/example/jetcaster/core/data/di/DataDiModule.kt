@@ -1,0 +1,38 @@
+/*
+ * Copyright 2024 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.example.jetcaster.core.data.di
+
+import androidx.room3.RoomDatabase
+import androidx.sqlite.driver.bundled.BundledSQLiteDriver
+import com.example.jetcaster.core.data.database.JetcasterDatabase
+import org.koin.core.module.Module
+import org.koin.dsl.module
+
+expect val platformDataModule: Module
+
+val dataModule = module {
+    includes(platformDataModule)
+
+    single {
+        get<RoomDatabase.Builder<JetcasterDatabase>>()
+            // This is not recommended for normal apps, but the goal of this sample isn't to
+            // showcase all of Room.
+            .fallbackToDestructiveMigration(true)
+            .setDriver(BundledSQLiteDriver())
+            .build()
+    }
+}

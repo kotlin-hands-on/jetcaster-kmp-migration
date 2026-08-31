@@ -1,0 +1,60 @@
+/*
+ * Copyright 2020 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.example.jetcaster.core.data.database.model
+
+import androidx.room3.ColumnInfo
+import androidx.room3.Embedded
+import androidx.room3.TypeConverters
+import kotlin.time.Instant
+
+@TypeConverters(InstantConverterConverter::class)
+class PodcastWithExtraInfo {
+    @Embedded
+    lateinit var podcast: Podcast
+
+    @ColumnInfo(name = "last_episode_date")
+    var lastEpisodeDate: Instant? = null
+
+    @ColumnInfo(name = "is_followed")
+    var isFollowed: Boolean = false
+
+    /**
+     * Allow consumers to destructure this class
+     */
+    operator fun component1() = podcast
+    operator fun component2() = lastEpisodeDate
+    operator fun component3() = isFollowed
+
+    override fun equals(other: Any?): Boolean = when {
+        other === this -> true
+
+        other is PodcastWithExtraInfo -> {
+            podcast == other.podcast &&
+                lastEpisodeDate == other.lastEpisodeDate &&
+                isFollowed == other.isFollowed
+        }
+
+        else -> false
+    }
+
+    override fun hashCode(): Int {
+        var result = isFollowed.hashCode()
+        result = 31 * result + podcast.hashCode()
+        result = 31 * result + (lastEpisodeDate?.hashCode() ?: 0)
+        return result
+    }
+}

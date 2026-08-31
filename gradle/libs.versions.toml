@@ -10,11 +10,14 @@ android-minSdk = "23"
 # @keep
 android-targetSdk = "37"
 androidx-activity = "1.13.0"
+androidx-compose = "1.12.0"
 androidx-lifecycle = "2.11.0"
 androidx-material3 = "1.5.0-alpha22"
 androidx-navigation = "2.9.8"
 androidx-palette = "1.0.0"
-androidx-room = "2.8.4"
+androidx-room = "3.0.0-alpha06"
+androidx-sqlite = "2.7.0-alpha06"
+androidx-test = "1.7.0"
 androidx-test-espresso = "3.7.0"
 androidx-test-ext = "1.3.0"
 androidx-window = "1.5.1"
@@ -27,7 +30,6 @@ kotlinx-collections-immutable = "0.4.0"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
 ksp = "2.3.9"
-okhttp = "5.4.0"
 rssparser = "6.1.5"
 spotless = "8.7.0"
 
@@ -41,11 +43,11 @@ androidx-compose-material3 = { module = "androidx.compose.material3:material3", 
 androidx-compose-material3-adaptive = { module = "androidx.compose.material3.adaptive:adaptive" }
 androidx-compose-material3-adaptive-layout = { module = "androidx.compose.material3.adaptive:adaptive-layout" }
 androidx-compose-material3-adaptive-navigation = { module = "androidx.compose.material3.adaptive:adaptive-navigation" }
-androidx-compose-runtime = { module = "androidx.compose.runtime:runtime" }
 androidx-compose-ui = { module = "androidx.compose.ui:ui" }
 androidx-compose-ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 androidx-compose-ui-text = { module = "androidx.compose.ui:ui-text" }
 androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
+androidx-compose-runtime-annotation = { module = "androidx.compose.runtime:runtime-annotation", version.ref = "androidx-compose" }
 androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidx-corektx" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
@@ -53,17 +55,19 @@ androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-ru
 androidx-lifecycle-viewModelCompose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "androidx-lifecycle" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation" }
 androidx-palette = { module = "androidx.palette:palette", version.ref = "androidx-palette" }
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "androidx-room" }
-androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "androidx-room" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "androidx-room" }
+androidx-room-compiler = { module = "androidx.room3:room3-compiler", version.ref = "androidx-room" }
+androidx-room-runtime = { module = "androidx.room3:room3-runtime", version.ref = "androidx-room" }
+androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "androidx-sqlite" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
 androidx-test-ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-test-ext" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test" }
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
 androidx-window-core = { module = "androidx.window:window-core", version.ref = "androidx-window" }
 coil-kt-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 core-jdk-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.ref = "jdkDesugar" }
 kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 html-converter = { module = "be.digitalia.compose.htmlconverter:htmlconverter", version.ref = "htmlconverter" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
@@ -76,8 +80,6 @@ kotlinx-test-annotations-common = { module = "org.jetbrains.kotlin:kotlin-test-a
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
-okhttp-logging = { module = "com.squareup.okhttp3:logging-interceptor", version.ref = "okhttp" }
-okhttp3 = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparser" }
 koin-androidx-compose = { module = "io.insert-koin:koin-androidx-compose", version.ref = "koin" }
 koin-androidx-compose-navigation = { module = "io.insert-koin:koin-androidx-compose-navigation", version.ref = "koin" }
@@ -88,3 +90,6 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+androidx-room = { id = "androidx.room3", version.ref = "androidx-room" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }

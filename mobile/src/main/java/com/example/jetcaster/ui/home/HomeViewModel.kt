@@ -23,6 +23,7 @@ import com.example.jetcaster.core.data.database.model.EpisodeToPodcast
 import com.example.jetcaster.core.data.repository.EpisodeStore
 import com.example.jetcaster.core.data.repository.PodcastStore
 import com.example.jetcaster.core.data.repository.PodcastsRepository
+import com.example.jetcaster.core.data.util.combine
 import com.example.jetcaster.core.domain.FilterableCategoriesUseCase
 import com.example.jetcaster.core.domain.PodcastCategoryFilterUseCase
 import com.example.jetcaster.core.model.CategoryInfo
@@ -85,7 +86,7 @@ class HomeViewModel (
         viewModelScope.launch {
             // Combines the latest value from each of the flows, allowing us to generate a
             // view state instance which only contains the latest values.
-            com.example.jetcaster.core.util.combine(
+            combine(
                 homeCategories,
                 selectedHomeCategory,
                 subscribedPodcasts,
