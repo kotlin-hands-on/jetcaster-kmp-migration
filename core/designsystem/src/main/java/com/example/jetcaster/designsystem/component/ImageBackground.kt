@@ -26,7 +26,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.layout.ContentScale
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 @Composable
 fun ImageBackgroundColorScrim(url: String?, color: Color, modifier: Modifier = Modifier) {

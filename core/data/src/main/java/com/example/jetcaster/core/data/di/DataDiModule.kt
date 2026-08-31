@@ -16,9 +16,10 @@
 
 package com.example.jetcaster.core.data.di
 
+import android.content.Context
 import androidx.room.Room
-import coil.ImageLoader
-import coil.request.CachePolicy
+import coil3.ImageLoader
+import coil3.request.CachePolicy
 import com.example.jetcaster.core.data.BuildConfig
 import com.example.jetcaster.core.data.JetcasterDispatchers
 import com.example.jetcaster.core.data.JetcasterDispatchers.ioDispatcher

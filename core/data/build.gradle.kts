@@ -66,6 +66,7 @@ dependencies {
 
     // Image loading
     implementation(libs.coil.kt.compose)
+    implementation(libs.coil.network.ktor3)
 
     // Compose
     val composeBom = platform(libs.androidx.compose.bom)
