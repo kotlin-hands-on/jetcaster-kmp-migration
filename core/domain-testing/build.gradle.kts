@@ -21,6 +21,12 @@ plugins {
     alias(libs.plugins.android.library)
 }
 
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.add("-opt-in=kotlin.time.ExperimentalTime")
+    }
+}
+
 android {
     compileSdk =
         libs.versions.android.compileSdk
@@ -62,6 +68,8 @@ dependencies {
     implementation(projects.core.domain)
 
     coreLibraryDesugaring(libs.core.jdk.desugaring)
+
+    implementation(libs.kotlinx.datetime)
 
     testImplementation(libs.kotlinx.test.core)
     testImplementation(libs.kotlinx.test.junit)

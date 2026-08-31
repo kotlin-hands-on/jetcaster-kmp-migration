@@ -17,10 +17,11 @@
 package com.example.jetcaster.core.player
 
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import java.time.Duration
+import kotlin.time.Duration
 import kotlinx.coroutines.flow.StateFlow
+import kotlin.time.Duration.Companion.milliseconds
 
-val DefaultPlaybackSpeed = Duration.ofSeconds(1)
+val DefaultPlaybackSpeed = 1.milliseconds
 
 data class EpisodePlayerState(
     val currentEpisode: PlayerEpisode? = null,
@@ -117,10 +118,10 @@ interface EpisodePlayer {
     /**
      * Increases the speed of Player playback by a given time specified in [duration].
      */
-    fun increaseSpeed(speed: Duration = Duration.ofMillis(500))
+    fun increaseSpeed(speed: Duration = 500.milliseconds)
 
     /**
      * Decreases the speed of Player playback by a given time specified in [duration].
      */
-    fun decreaseSpeed(speed: Duration = Duration.ofMillis(500))
+    fun decreaseSpeed(speed: Duration = 500.milliseconds)
 }

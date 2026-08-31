@@ -113,9 +113,8 @@ import com.example.jetcaster.util.fullWidthItem
 import com.example.jetcaster.util.isCompact
 import com.example.jetcaster.util.quantityStringResource
 import com.example.jetcaster.util.radialGradientScrim
-import java.time.Duration
-import java.time.LocalDateTime
-import java.time.OffsetDateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.launch
@@ -721,9 +720,9 @@ private fun FollowedPodcastCarouselItem(
 }
 
 @Composable
-private fun lastUpdated(updated: OffsetDateTime): String {
-    val duration = Duration.between(updated.toLocalDateTime(), LocalDateTime.now())
-    val days = duration.toDays().toInt()
+private fun lastUpdated(updated: Instant): String {
+    val duration = Clock.System.now() - updated
+    val days = duration.inWholeDays.toInt()
 
     return when {
         days > 28 -> stringResource(R.string.updated_longer)

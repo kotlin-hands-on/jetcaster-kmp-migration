@@ -104,9 +104,12 @@ import com.example.jetcaster.util.verticalGradientScrim
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
 import com.google.accompanist.adaptive.VerticalTwoPaneStrategy
-import java.time.Duration
+import kotlin.time.Duration
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.DurationUnit
 
 /**
  * Stateful version of the Podcast player
@@ -665,8 +668,8 @@ private fun PodcastInformation(
 }
 
 fun Duration.formatString(): String {
-    val minutes = this.toMinutes().toString().padStart(2, '0')
-    val secondsLeft = (this.toSeconds() % 60).toString().padStart(2, '0')
+    val minutes = this.toInt(DurationUnit.MINUTES).toString().padStart(2, '0')
+    val secondsLeft = (this.toInt(DurationUnit.SECONDS) % 60).toString().padStart(2, '0')
     return "$minutes:$secondsLeft"
 }
 
@@ -683,7 +686,7 @@ private fun PlayerSlider(
             .padding(horizontal = 16.dp),
     ) {
         var sliderValue by remember(timeElapsed) { mutableStateOf(timeElapsed) }
-        val maxRange = (episodeDuration?.toSeconds() ?: 0).toFloat()
+        val maxRange = (episodeDuration?.toInt(DurationUnit.SECONDS) ?: 0).toFloat()
 
         Row(Modifier.fillMaxWidth()) {
             Text(
@@ -694,11 +697,11 @@ private fun PlayerSlider(
         }
 
         Slider(
-            value = sliderValue.seconds.toFloat(),
+            value = sliderValue.toInt(DurationUnit.SECONDS).toFloat(),
             valueRange = 0f..maxRange,
             onValueChange = {
                 onSeekingStarted()
-                sliderValue = Duration.ofSeconds(it.toLong())
+                sliderValue = it.toLong().seconds
             },
             onValueChangeFinished = { onSeekingFinished(sliderValue) },
         )
@@ -790,7 +793,7 @@ private fun PlayerButtons(
             customItem(
                 buttonGroupContent = {
                     IconButton(
-                        onClick = { onRewindBy(Duration.ofSeconds(10)) },
+                        onClick = { onRewindBy(10.seconds) },
                         modifier = rewindFastForwardButtonsModifier.animateWidth(interactionSource = interactionSources[1]),
                         shape = RoundedCornerShape(15.dp),
                         colors = IconButtonColors(
@@ -814,7 +817,7 @@ private fun PlayerButtons(
             customItem(
                 buttonGroupContent = {
                     IconButton(
-                        onClick = { onAdvanceBy(Duration.ofSeconds(10)) },
+                        onClick = { onAdvanceBy(10.seconds) },
                         modifier = rewindFastForwardButtonsModifier.animateWidth(interactionSource = interactionSources[2]),
                         shape = RoundedCornerShape(15.dp),
                         colors = IconButtonColors(
@@ -914,7 +917,7 @@ fun PlayerScreenPreview() {
                     episodePlayerState = EpisodePlayerState(
                         currentEpisode = PlayerEpisode(
                             title = "Title",
-                            duration = Duration.ofHours(2),
+                            duration = 2.hours,
                             podcastName = "Podcast",
                         ),
                         isPlaying = false,

@@ -18,14 +18,16 @@ package com.example.jetcaster.core.data.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
-import java.time.OffsetDateTime
+import androidx.room.TypeConverters
+import kotlin.time.Instant
 
+@TypeConverters(InstantConverterConverter::class)
 class PodcastWithExtraInfo {
     @Embedded
     lateinit var podcast: Podcast
 
     @ColumnInfo(name = "last_episode_date")
-    var lastEpisodeDate: OffsetDateTime? = null
+    var lastEpisodeDate: Instant? = null
 
     @ColumnInfo(name = "is_followed")
     var isFollowed: Boolean = false

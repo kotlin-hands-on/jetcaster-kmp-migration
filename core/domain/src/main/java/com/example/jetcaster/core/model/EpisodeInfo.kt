@@ -17,8 +17,8 @@
 package com.example.jetcaster.core.model
 
 import com.example.jetcaster.core.data.database.model.Episode
-import java.time.Duration
-import java.time.OffsetDateTime
+import kotlin.time.Duration
+import kotlin.time.Instant
 
 /**
  * External data layer representation of an episode.
@@ -31,7 +31,7 @@ data class EpisodeInfo(
     val subTitle: String = "",
     val summary: String = "",
     val author: String = "",
-    val published: OffsetDateTime = OffsetDateTime.MIN,
+    val published: Instant = Instant.DISTANT_PAST,
     val duration: Duration? = null,
     val mediaUrls: List<String> = emptyList(),
 )

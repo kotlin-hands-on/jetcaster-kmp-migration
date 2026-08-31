@@ -62,6 +62,13 @@ import com.example.jetcaster.designsystem.component.PodcastImage
 import com.example.jetcaster.ui.theme.JetcasterTheme
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
+import kotlin.time.DurationUnit
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
+import kotlinx.datetime.toLocalDateTime
+
 
 @Composable
 fun EpisodeListItem(
@@ -166,6 +173,12 @@ private fun EpisodeListItemFooter(
                 .semantics { role = Role.Button },
         )
 
+        val localPublishedDateTime =
+            episode.published.toLocalDateTime(TimeZone.currentSystemDefault()) //TODO: Check conversion
+        val dateTimeFormat = LocalDateTime.Format {
+            byUnicodePattern("uuuu/MM/dd' 'HH:mm")
+        }
+        val published = dateTimeFormat.format(localPublishedDateTime)
         val duration = episode.duration
         Text(
             text = when {
@@ -174,13 +187,17 @@ private fun EpisodeListItemFooter(
                     // formatted string
                     stringResource(
                         R.string.episode_date_duration,
-                        MediumDateFormatter.format(episode.published),
-                        duration.toMinutes().toInt(),
+                        published,
+                        duration.toInt(DurationUnit.MINUTES),
                     )
                 }
 
                 // Otherwise we just use the date
-                else -> MediumDateFormatter.format(episode.published)
+                else -> {
+                    LocalDateTime.Format {
+                        byUnicodePattern("uuuu/MM/dd' 'HH:mm")
+                    }.format(localPublishedDateTime)
+                }
             },
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,

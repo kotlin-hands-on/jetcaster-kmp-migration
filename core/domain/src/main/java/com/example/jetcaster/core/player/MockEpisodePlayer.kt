@@ -17,7 +17,7 @@
 package com.example.jetcaster.core.player
 
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import java.time.Duration
+import kotlin.time.Duration
 import kotlin.reflect.KProperty
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlin.time.DurationUnit
 
 class MockEpisodePlayer(private val mainDispatcher: CoroutineDispatcher) : EpisodePlayer {
 
@@ -93,11 +94,13 @@ class MockEpisodePlayer(private val mainDispatcher: CoroutineDispatcher) : Episo
 
         val episode = _currentEpisode.value ?: return
 
+        if (episode.duration == null) return
+
         isPlaying.value = true
         timerJob = coroutineScope.launch {
             // Increment timer by a second
             while (isActive && timeElapsed.value < episode.duration) {
-                delay(playerSpeed.toMillis())
+                delay(playerSpeed.toLong(DurationUnit.MILLISECONDS))
                 timeElapsed.update { it + playerSpeed }
             }
 

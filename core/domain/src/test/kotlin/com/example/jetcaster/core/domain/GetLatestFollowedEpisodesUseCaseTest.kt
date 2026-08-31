@@ -19,8 +19,9 @@ package com.example.jetcaster.core.domain
 import com.example.jetcaster.core.data.database.model.Episode
 import com.example.jetcaster.core.data.testing.repository.TestEpisodeStore
 import com.example.jetcaster.core.data.testing.repository.TestPodcastStore
-import java.time.Duration
-import java.time.OffsetDateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -41,33 +42,33 @@ class GetLatestFollowedEpisodesUseCaseTest {
             uri = "",
             podcastUri = testPodcasts[0].podcast.uri,
             title = "title1",
-            published = OffsetDateTime.MIN,
+            published = Instant.DISTANT_PAST,
             subtitle = "subtitle1",
             summary = "summary1",
             author = "author1",
-            duration = Duration.ofMinutes(1),
+            duration = 1.minutes,
             mediaUrls = listOf("Url1"),
         ),
         Episode(
             uri = "",
             podcastUri = testPodcasts[0].podcast.uri,
             title = "title2",
-            published = OffsetDateTime.now(),
+            published = Clock.System.now(),
             subtitle = "subtitle2",
             summary = "summary2",
             author = "author2",
-            duration = Duration.ofMinutes(1),
+            duration = 1.minutes,
             mediaUrls = listOf("Url1"),
         ),
         Episode(
             uri = "",
             podcastUri = testPodcasts[1].podcast.uri,
             title = "title3",
-            published = OffsetDateTime.MAX,
+            published = Instant.DISTANT_FUTURE,
             subtitle = "subtitle3",
             summary = "summary3",
             author = "author3",
-            duration = Duration.ofMinutes(1),
+            duration = 1.minutes,
             mediaUrls = listOf("Url1"),
         ),
     )

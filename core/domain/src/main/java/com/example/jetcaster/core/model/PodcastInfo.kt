@@ -18,7 +18,7 @@ package com.example.jetcaster.core.model
 
 import com.example.jetcaster.core.data.database.model.Podcast
 import com.example.jetcaster.core.data.database.model.PodcastWithExtraInfo
-import java.time.OffsetDateTime
+import kotlin.time.Instant
 
 /**
  * External data layer representation of a podcast.
@@ -30,7 +30,7 @@ data class PodcastInfo(
     val imageUrl: String = "",
     val description: String = "",
     val isSubscribed: Boolean? = null,
-    val lastEpisodeDate: OffsetDateTime? = null,
+    val lastEpisodeDate: Instant? = null,
 )
 
 fun Podcast.asExternalModel(): PodcastInfo = PodcastInfo(

@@ -21,8 +21,11 @@ import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.model.PodcastToEpisodeInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import java.time.OffsetDateTime
-import java.time.ZoneOffset
+import kotlinx.datetime.FixedOffsetTimeZone
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.UtcOffset
+import kotlinx.datetime.toInstant
+import kotlin.time.Clock
 
 val PreviewCategories = listOf(
     CategoryInfo(id = 1, name = "Crime"),
@@ -36,13 +39,13 @@ val PreviewPodcasts = listOf(
         title = "Android Developers Backstage",
         author = "Android Developers",
         isSubscribed = true,
-        lastEpisodeDate = OffsetDateTime.now(),
+        lastEpisodeDate = Clock.System.now(),
     ),
     PodcastInfo(
         uri = "fakeUri://podcast/2",
         title = "Google Developers podcast",
         author = "Google Developers",
-        lastEpisodeDate = OffsetDateTime.now(),
+        lastEpisodeDate = Clock.System.now(),
     ),
 )
 
@@ -52,9 +55,11 @@ val PreviewEpisodes = listOf(
         title = "Episode 140: Lorem ipsum dolor",
         summary = "In this episode, Romain, Chet and Tor talked with Mady Melor and Artur " +
             "Tsurkan from the System UI team about... Bubbles!",
-        published = OffsetDateTime.of(
+        published = LocalDateTime(
             2020, 6, 2, 9,
-            27, 0, 0, ZoneOffset.of("-0800"),
+            27, 0, 0,
+        ).toInstant(
+            FixedOffsetTimeZone(UtcOffset(-8)),
         ),
     ),
 )

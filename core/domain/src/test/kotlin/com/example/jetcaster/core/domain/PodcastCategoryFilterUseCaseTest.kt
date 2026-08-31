@@ -24,8 +24,8 @@ import com.example.jetcaster.core.data.database.model.PodcastWithExtraInfo
 import com.example.jetcaster.core.data.testing.repository.TestCategoryStore
 import com.example.jetcaster.core.model.asExternalModel
 import com.example.jetcaster.core.model.asPodcastToEpisodeInfo
-import java.time.Duration
-import java.time.OffsetDateTime
+import kotlin.time.Clock
+import kotlin.time.Duration.Companion.minutes
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test
@@ -41,11 +41,11 @@ class PodcastCategoryFilterUseCaseTest {
                 "",
                 "",
                 "Episode 1",
-                published = OffsetDateTime.now(),
+                published = Clock.System.now(),
                 subtitle = "subtitle1",
                 summary = "summary1",
                 author = "author1",
-                duration = Duration.ofMinutes(1),
+                duration = 1.minutes,
                 mediaUrls = listOf("Url1"),
             )
             _podcasts = listOf(
@@ -60,11 +60,11 @@ class PodcastCategoryFilterUseCaseTest {
                 "",
                 "",
                 "Episode 2",
-                published = OffsetDateTime.now(),
+                published = Clock.System.now(),
                 subtitle = "subtitle2",
                 summary = "summary2",
                 author = "author2",
-                duration = Duration.ofMinutes(1),
+                duration = 1.minutes,
                 mediaUrls = listOf("Url1"),
             )
             _podcasts = listOf(
@@ -79,11 +79,11 @@ class PodcastCategoryFilterUseCaseTest {
                 "",
                 "",
                 "Episode 3",
-                published = OffsetDateTime.now(),
+                published = Clock.System.now(),
                 subtitle = "subtitle3",
                 summary = "summary3",
                 author = "author2",
-                duration = Duration.ofMinutes(1),
+                duration = 1.minutes,
                 mediaUrls = listOf("Url1"),
             )
             _podcasts = listOf(

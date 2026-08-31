@@ -19,8 +19,8 @@ package com.example.jetcaster.core.player.model
 import com.example.jetcaster.core.data.database.model.EpisodeToPodcast
 import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.PodcastInfo
-import java.time.Duration
-import java.time.OffsetDateTime
+import kotlin.time.Duration
+import kotlin.time.Instant
 
 /**
  * Episode data with necessary information to be used within a player.
@@ -30,7 +30,7 @@ data class PlayerEpisode(
     val uri: String = "",
     val title: String = "",
     val subTitle: String = "",
-    val published: OffsetDateTime = OffsetDateTime.MIN,
+    val published: Instant = Instant.DISTANT_PAST,
     val duration: Duration? = null,
     val podcastName: String = "",
     val author: String = "",

@@ -23,8 +23,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
-import java.time.Duration
-import java.time.OffsetDateTime
+import kotlin.time.Duration
+import kotlin.time.Instant
 
 @Entity(
     tableName = "episodes",
@@ -42,15 +42,15 @@ import java.time.OffsetDateTime
         ),
     ],
 )
-@TypeConverters(ListOfStringConverter::class)
-data class Episode(
+@TypeConverters(ListOfStringConverter::class, InstantConverterConverter::class, DurationOffsetConverter::class)
+data class Episode constructor(
     @PrimaryKey @ColumnInfo(name = "uri") val uri: String,
     @ColumnInfo(name = "podcast_uri") val podcastUri: String,
     @ColumnInfo(name = "title") val title: String,
     @ColumnInfo(name = "subtitle") val subtitle: String? = null,
     @ColumnInfo(name = "summary") val summary: String? = null,
     @ColumnInfo(name = "author") val author: String? = null,
-    @ColumnInfo(name = "published") val published: OffsetDateTime,
+    @ColumnInfo(name = "published") val published: Instant,
     @ColumnInfo(name = "duration") val duration: Duration? = null,
     @ColumnInfo(name = "media_urls") val mediaUrls: List<String>,
 )
@@ -64,5 +64,29 @@ class ListOfStringConverter {
     @TypeConverter
     fun fromList(list: List<String>): String {
         return list.joinToString(",")
+    }
+}
+
+class InstantConverterConverter {
+    @TypeConverter
+    fun fromString(value: String): Instant {
+        return Instant.parse(value)
+    }
+
+    @TypeConverter
+    fun fromInstant(value: Instant): String {
+        return value.toString()
+    }
+}
+
+class DurationOffsetConverter {
+    @TypeConverter
+    fun fromString(value: String): Duration {
+        return Duration.parse(value)
+    }
+
+    @TypeConverter
+    fun fromDuration(value: Duration): String {
+        return value.toString()
     }
 }
