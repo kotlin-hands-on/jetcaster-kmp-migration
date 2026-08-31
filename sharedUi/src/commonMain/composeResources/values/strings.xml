@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="episode_added_to_your_queue">Episode added to your queue</string>
+    <string name="see_more">see more</string>
+    <string name="cd_more">More</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_play">Play</string>
+    <string name="episode_date_duration">%1$s &#8226; %2$d mins</string>
+    <string name="cd_add">Add</string>
+</resources>

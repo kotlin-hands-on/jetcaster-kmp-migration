@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.jetcaster.designsystem.component
+package com.example.jetcaster.core.designsystem.component
 
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.runtime.Composable

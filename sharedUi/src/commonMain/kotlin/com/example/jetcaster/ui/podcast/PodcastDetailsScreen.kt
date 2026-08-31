@@ -58,28 +58,62 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.jetcaster.R
+import com.example.jetcaster.core.designsystem.component.PodcastImage
+import com.example.jetcaster.core.designsystem.theme.Keyline1
 import com.example.jetcaster.core.domain.testing.PreviewEpisodes
 import com.example.jetcaster.core.domain.testing.PreviewPodcasts
 import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import com.example.jetcaster.designsystem.component.PodcastImage
-import com.example.jetcaster.core.designsystem.theme.Keyline1
-import com.example.jetcaster.ui.shared.EpisodeListItem
-import com.example.jetcaster.ui.shared.Loading
-import com.example.jetcaster.ui.tooling.DevicePreviews
+import com.example.jetcaster.shared.Res
+import com.example.jetcaster.shared.cd_back
+import com.example.jetcaster.shared.cd_more
+import com.example.jetcaster.shared.episode_added_to_your_queue
+import com.example.jetcaster.shared.ic_add
+import com.example.jetcaster.shared.ic_arrow_back
+import com.example.jetcaster.shared.ic_check
+import com.example.jetcaster.shared.ic_notifications
+import com.example.jetcaster.shared.ic_notifications_active
+import com.example.jetcaster.shared.see_more
+import com.example.jetcaster.shared.podcast.PodcastDetailsViewModel
+import com.example.jetcaster.shared.podcast.PodcastUiState
 import com.example.jetcaster.util.fullWidthItem
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import com.example.jetcaster.shared.ui.EpisodeListItem
+import com.example.jetcaster.shared.ui.Loading
+import org.koin.compose.viewmodel.koinViewModel
+import org.koin.core.parameter.parametersOf
+
+@Composable
+fun PodcastDetailsScreen(
+    podcastUri: String,
+    navigateToPlayer: (EpisodeInfo) -> Unit,
+    navigateBack: () -> Unit,
+    showBackButton: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    val podcastDetailsViewModel = koinViewModel<PodcastDetailsViewModel>(
+        key = podcastUri,
+        parameters = { parametersOf(podcastUri) },
+    )
+
+    PodcastDetailsScreen(
+        viewModel = podcastDetailsViewModel,
+        navigateToPlayer = navigateToPlayer,
+        navigateBack = navigateBack,
+        showBackButton = showBackButton,
+        modifier = modifier,
+    )
+}
 
 @Composable
 fun PodcastDetailsScreen(
@@ -132,7 +166,7 @@ fun PodcastDetailsScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
-    val snackBarText = stringResource(id = R.string.episode_added_to_your_queue)
+    val snackBarText = stringResource(Res.string.episode_added_to_your_queue)
     Scaffold(
         modifier = modifier.fillMaxSize(),
         topBar = {
@@ -203,7 +237,11 @@ fun PodcastDetailsContent(
 }
 
 @Composable
-fun PodcastDetailsHeaderItem(podcast: PodcastInfo, toggleSubscribe: (PodcastInfo) -> Unit, modifier: Modifier = Modifier) {
+fun PodcastDetailsHeaderItem(
+    podcast: PodcastInfo,
+    toggleSubscribe: (PodcastInfo) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier.padding(Keyline1),
     ) {
@@ -270,7 +308,7 @@ fun PodcastDetailsDescription(podcast: PodcastInfo, modifier: Modifier) {
                     .background(MaterialTheme.colorScheme.surface),
             ) {
                 Text(
-                    text = stringResource(id = R.string.see_more),
+                    text = stringResource(Res.string.see_more),
                     style = MaterialTheme.typography.bodyMedium.copy(
                         textDecoration = TextDecoration.Underline,
                         fontWeight = FontWeight.Bold,
@@ -284,7 +322,11 @@ fun PodcastDetailsDescription(podcast: PodcastInfo, modifier: Modifier) {
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-fun PodcastDetailsHeaderItemButtons(isSubscribed: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun PodcastDetailsHeaderItemButtons(
+    isSubscribed: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     var isNotificationOn by remember { mutableStateOf(false) }
     val interactionSource1 = remember { MutableInteractionSource() }
     val interactionSource2 = remember { MutableInteractionSource() }
@@ -318,7 +360,7 @@ fun PodcastDetailsHeaderItemButtons(isSubscribed: Boolean, onClick: () -> Unit, 
                     interactionSource = interactionSource1,
                 ) {
                     Icon(
-                        painterResource(id = if (isSubscribed) R.drawable.ic_check else R.drawable.ic_add),
+                        painterResource(if (isSubscribed) Res.drawable.ic_check else Res.drawable.ic_add),
                         contentDescription = null,
                     )
                 }
@@ -350,12 +392,12 @@ fun PodcastDetailsHeaderItemButtons(isSubscribed: Boolean, onClick: () -> Unit, 
                         .animateWidth(interactionSource = interactionSource2),
                 ) {
                     Icon(
-                        painterResource(id = if (isNotificationOn) R.drawable.ic_notifications_active else R.drawable.ic_notifications),
-                        contentDescription = stringResource(R.string.cd_more),
+                        painterResource(if (isNotificationOn) Res.drawable.ic_notifications_active else Res.drawable.ic_notifications),
+                        contentDescription = stringResource(Res.string.cd_more),
                     )
                 }
             },
-            menuContent = {},
+            menuContent = { },
         )
         customItem(
             buttonGroupContent = { Spacer(modifier.weight(1f)) },
@@ -372,8 +414,8 @@ fun PodcastDetailsTopAppBar(navigateBack: () -> Unit, modifier: Modifier = Modif
         navigationIcon = {
             IconButton(onClick = navigateBack) {
                 Icon(
-                    painterResource(id = R.drawable.ic_arrow_back),
-                    contentDescription = stringResource(id = R.string.cd_back),
+                    painterResource(Res.drawable.ic_arrow_back),
+                    contentDescription = stringResource(Res.string.cd_back),
                 )
             }
         },
@@ -390,7 +432,8 @@ fun PodcastDetailsHeaderItemPreview() {
     )
 }
 
-@DevicePreviews
+//@DevicePreviews // TODO what to do here?
+@Preview
 @Composable
 fun PodcastDetailsScreenPreview() {
     PodcastDetailsScreen(

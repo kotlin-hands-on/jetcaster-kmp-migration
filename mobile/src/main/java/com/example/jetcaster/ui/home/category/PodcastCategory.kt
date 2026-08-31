@@ -50,10 +50,10 @@ import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.PodcastCategoryFilterResult
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import com.example.jetcaster.designsystem.component.PodcastImage
+import com.example.jetcaster.core.designsystem.component.PodcastImage
 import com.example.jetcaster.ui.LocalAnimatedVisibilityScope
 import com.example.jetcaster.ui.LocalSharedTransitionScope
-import com.example.jetcaster.ui.shared.EpisodeListItem
+import com.example.jetcaster.shared.ui.EpisodeListItem
 import com.example.jetcaster.ui.theme.JetcasterTheme
 import com.example.jetcaster.util.ToggleFollowPodcastIconButton
 import com.example.jetcaster.util.fullWidthItem

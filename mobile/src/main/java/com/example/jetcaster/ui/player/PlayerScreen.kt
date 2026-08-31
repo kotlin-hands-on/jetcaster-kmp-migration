@@ -90,9 +90,9 @@ import androidx.window.layout.FoldingFeature
 import com.example.jetcaster.R
 import com.example.jetcaster.core.player.EpisodePlayerState
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import com.example.jetcaster.designsystem.component.HtmlTextContainer
-import com.example.jetcaster.designsystem.component.ImageBackgroundColorScrim
-import com.example.jetcaster.designsystem.component.PodcastImage
+import com.example.jetcaster.core.designsystem.component.HtmlTextContainer
+import com.example.jetcaster.core.designsystem.component.ImageBackgroundColorScrim
+import com.example.jetcaster.core.designsystem.component.PodcastImage
 import com.example.jetcaster.ui.LocalAnimatedVisibilityScope
 import com.example.jetcaster.ui.LocalSharedTransitionScope
 import com.example.jetcaster.ui.theme.JetcasterTheme

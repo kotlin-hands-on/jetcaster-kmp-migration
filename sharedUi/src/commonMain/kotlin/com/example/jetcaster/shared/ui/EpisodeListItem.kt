@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package com.example.jetcaster.ui.shared
+package com.example.jetcaster.shared.ui
 
-import android.content.res.Configuration
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -43,32 +42,36 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.jetcaster.R
-import com.example.jetcaster.core.domain.testing.PreviewEpisodes
-import com.example.jetcaster.core.domain.testing.PreviewPodcasts
+import com.example.jetcaster.core.designsystem.component.HtmlTextContainer
+import com.example.jetcaster.core.designsystem.component.PodcastImage
 import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
-import com.example.jetcaster.designsystem.component.HtmlTextContainer
-import com.example.jetcaster.designsystem.component.PodcastImage
-import com.example.jetcaster.ui.theme.JetcasterTheme
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import kotlin.time.DurationUnit
+import com.example.jetcaster.core.domain.testing.PreviewEpisodes
+import com.example.jetcaster.core.domain.testing.PreviewPodcasts
+import com.example.jetcaster.shared.Res
+import com.example.jetcaster.shared.cd_add
+import com.example.jetcaster.shared.cd_more
+import com.example.jetcaster.shared.cd_play
+import com.example.jetcaster.shared.episode_date_duration
+import com.example.jetcaster.shared.ic_delete
+import com.example.jetcaster.shared.ic_more_vert
+import com.example.jetcaster.shared.ic_play_circle
+import com.example.jetcaster.shared.ic_playlist_add
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
 import kotlinx.datetime.format.byUnicodePattern
 import kotlinx.datetime.toLocalDateTime
-
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import kotlin.time.DurationUnit
 
 @Composable
 fun EpisodeListItem(
@@ -94,7 +97,7 @@ fun EpisodeListItem(
                     .padding(end = 40.dp),
             ) {
                 Icon(
-                    painterResource(id = R.drawable.ic_delete),
+                    painterResource(Res.drawable.ic_delete),
                     contentDescription = null,
                     modifier = Modifier.align(Alignment.CenterEnd),
                 )
@@ -147,6 +150,7 @@ fun EpisodeListItem(
     }
 }
 
+@OptIn(FormatStringsInDatetimeFormats::class)
 @Composable
 private fun EpisodeListItemFooter(
     episode: EpisodeInfo,
@@ -159,8 +163,8 @@ private fun EpisodeListItemFooter(
         modifier = modifier,
     ) {
         Image(
-            painterResource(id = R.drawable.ic_play_circle),
-            contentDescription = stringResource(R.string.cd_play),
+            painterResource(Res.drawable.ic_play_circle),
+            contentDescription = stringResource(Res.string.cd_play),
             contentScale = ContentScale.Fit,
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
             modifier = Modifier
@@ -173,8 +177,7 @@ private fun EpisodeListItemFooter(
                 .semantics { role = Role.Button },
         )
 
-        val localPublishedDateTime =
-            episode.published.toLocalDateTime(TimeZone.currentSystemDefault()) //TODO: Check conversion
+        val localPublishedDateTime = episode.published.toLocalDateTime(TimeZone.currentSystemDefault()) //TODO: Check conversion
         val dateTimeFormat = LocalDateTime.Format {
             byUnicodePattern("uuuu/MM/dd' 'HH:mm")
         }
@@ -186,7 +189,7 @@ private fun EpisodeListItemFooter(
                     // If we have the duration, we combine the date/duration via a
                     // formatted string
                     stringResource(
-                        R.string.episode_date_duration,
+                        Res.string.episode_date_duration,
                         published,
                         duration.toInt(DurationUnit.MINUTES),
                     )
@@ -218,8 +221,8 @@ private fun EpisodeListItemFooter(
             },
         ) {
             Icon(
-                painterResource(id = R.drawable.ic_playlist_add),
-                contentDescription = stringResource(R.string.cd_add),
+                painterResource(Res.drawable.ic_playlist_add),
+                contentDescription = stringResource(Res.string.cd_add),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
@@ -228,8 +231,8 @@ private fun EpisodeListItemFooter(
             onClick = { /* TODO */ },
         ) {
             Icon(
-                painterResource(id = R.drawable.ic_more_vert),
-                contentDescription = stringResource(R.string.cd_more),
+                painterResource(Res.drawable.ic_more_vert),
+                contentDescription = stringResource(Res.string.cd_more),
                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
@@ -306,26 +309,22 @@ private fun EpisodeListItemImage(podcast: PodcastInfo, modifier: Modifier = Modi
 @Preview(
     name = "Light Mode",
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_NO,
+//    uiMode = Configuration.UI_MODE_NIGHT_NO, // TODO not possible in CMP
 )
 @Preview(
     name = "Dark Mode",
     showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES,
+//    uiMode = Configuration.UI_MODE_NIGHT_YES,// TODO not possible in CMP
 )
 @Composable
 private fun EpisodeListItemPreview() {
-    JetcasterTheme {
-        EpisodeListItem(
-            episode = PreviewEpisodes[0],
-            podcast = PreviewPodcasts[0],
-            onClick = {},
-            onQueueEpisode = {},
-            showSummary = true,
-        )
-    }
+//    JetcasterTheme {      // TODO we haven't migrated the theme to CMP to try migrating just one screen without the overall plumbing
+    EpisodeListItem(
+        episode = PreviewEpisodes[0],
+        podcast = PreviewPodcasts[0],
+        onClick = {},
+        onQueueEpisode = {},
+        showSummary = true,
+    )
 }
-
-private val MediumDateFormatter by lazy {
-    DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)
-}
+//}

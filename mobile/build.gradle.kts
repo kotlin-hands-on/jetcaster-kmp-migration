@@ -160,9 +160,9 @@ dependencies {
 
     implementation(projects.core.data)
     implementation(projects.core.designsystem)
-    implementation(projects.core.designsystem)
     implementation(projects.core.domain)
     implementation(projects.core.domainTesting)
+    implementation(projects.sharedUi)
 
     coreLibraryDesugaring(libs.core.jdk.desugaring)
 

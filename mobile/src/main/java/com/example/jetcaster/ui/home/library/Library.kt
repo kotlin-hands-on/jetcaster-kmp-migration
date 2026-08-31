@@ -30,7 +30,7 @@ import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.LibraryInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
 import com.example.jetcaster.core.designsystem.theme.Keyline1
-import com.example.jetcaster.ui.shared.EpisodeListItem
+import com.example.jetcaster.shared.ui.EpisodeListItem
 import com.example.jetcaster.util.fullWidthItem
 
 fun LazyGridScope.libraryItems(
