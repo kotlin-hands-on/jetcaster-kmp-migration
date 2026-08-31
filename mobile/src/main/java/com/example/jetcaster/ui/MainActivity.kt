@@ -22,11 +22,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.compositionLocalOf
-import androidx.navigation.compose.composable
-import androidx.window.layout.DisplayFeature
 import com.example.jetcaster.core.data.network.OnlineChecker
-import com.example.jetcaster.ui.player.PlayerScreen
 import com.example.jetcaster.ui.theme.JetcasterTheme
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import org.koin.compose.koinInject
@@ -34,7 +30,6 @@ import org.koin.compose.koinInject
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         enableEdgeToEdge()
         setContent {
             val adaptiveInfo = currentWindowAdaptiveInfo()
@@ -43,25 +38,10 @@ class MainActivity : ComponentActivity() {
                 JetcasterTheme {
                     JetcasterApp(
                         adaptiveInfo = adaptiveInfo,
-                        appState = appState,
-                        buildNavGraph = {
-                            composable(Screen.Player.route) {
-                                CompositionLocalProvider(
-                                    LocalAnimatedVisibilityScope provides this,
-                                ) {
-                                    PlayerScreen(
-                                        windowSizeClass = adaptiveInfo.windowSizeClass,
-                                        onBackPress = appState::navigateBack,
-                                    )
-                                }
-                            }
-                        },
+                        appState = appState
                     )
                 }
             }
         }
     }
 }
-
-// TODO this needs to be abstracted for CMP
-val LocalDisplayFeatures = compositionLocalOf<List<DisplayFeature>> { emptyList() }

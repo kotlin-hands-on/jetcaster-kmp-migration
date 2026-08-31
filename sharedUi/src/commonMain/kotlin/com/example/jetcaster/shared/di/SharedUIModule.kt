@@ -8,6 +8,7 @@ import com.example.jetcaster.core.data.di.otherModule
 import com.example.jetcaster.core.di.domainModule
 import com.example.jetcaster.shared.podcast.PodcastDetailsViewModel
 import com.example.jetcaster.ui.home.HomeViewModel
+import com.example.jetcaster.ui.player.PlayerViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -56,6 +57,14 @@ val sharedViewModelModule = module {
             podcastStore = get(),
             episodeStore = get(),
             episodePlayer = get(),
+        )
+    }
+
+    viewModel {
+        PlayerViewModel(
+            episodeStore = get(),
+            episodePlayer = get(),
+            savedStateHandle = get(),
         )
     }
 }

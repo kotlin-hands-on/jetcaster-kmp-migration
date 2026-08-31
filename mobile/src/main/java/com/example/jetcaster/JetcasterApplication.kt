@@ -19,12 +19,7 @@ package com.example.jetcaster
 import android.app.Application
 import androidx.compose.runtime.Composer
 import androidx.compose.runtime.ExperimentalComposeRuntimeApi
-import com.example.jetcaster.core.data.di.dataModule
-import com.example.jetcaster.core.data.di.otherModule
-import com.example.jetcaster.core.di.domainModule
-import com.example.jetcaster.di.viewModelModule
 import com.example.jetcaster.shared.di.initJetcasterDi
-import com.example.jetcaster.shared.di.jetcasterDiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -43,7 +38,6 @@ class JetcasterApplication : Application() {
         initJetcasterDi {
             androidLogger()
             androidContext(this@JetcasterApplication)
-            modules(viewModelModule)
         }
     }
 }
