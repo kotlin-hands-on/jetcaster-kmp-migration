@@ -16,22 +16,20 @@
 
 package com.example.jetcaster.core.data.network
 
-import coil.network.HttpException
 import com.example.jetcaster.core.data.Dispatcher
 import com.example.jetcaster.core.data.JetcasterDispatchers
 import com.example.jetcaster.core.data.database.model.Category
 import com.example.jetcaster.core.data.database.model.Episode
 import com.example.jetcaster.core.data.database.model.Podcast
-import com.rometools.modules.itunes.EntryInformation
-import com.rometools.modules.itunes.FeedInformation
-import com.rometools.rome.feed.synd.SyndEnclosure
-import com.rometools.rome.feed.synd.SyndEntry
-import com.rometools.rome.feed.synd.SyndFeed
-import com.rometools.rome.io.SyndFeedInput
+import com.prof18.rssparser.RssParser
+import com.prof18.rssparser.model.RssChannel
+import com.prof18.rssparser.model.RssItem
 import java.time.Duration
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.util.concurrent.TimeUnit
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -40,31 +38,18 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import okhttp3.CacheControl
-import okhttp3.OkHttpClient
-import okhttp3.Request
 
 /**
  * A class which fetches some selected podcast RSS feeds.
  *
- * @param okHttpClient [OkHttpClient] to use for network requests
- * @param syndFeedInput [SyndFeedInput] to use for parsing RSS feeds.
  * @param ioDispatcher [CoroutineDispatcher] to use for running fetch requests.
  */
 class PodcastsFetcher @Inject constructor(
-    private val okHttpClient: OkHttpClient,
-    private val syndFeedInput: SyndFeedInput,
     @Dispatcher(JetcasterDispatchers.IO) private val ioDispatcher: CoroutineDispatcher,
 ) {
 
-    /**
-     * It seems that most podcast hosts do not implement HTTP caching appropriately.
-     * Instead of fetching data on every app open, we instead allow the use of 'stale'
-     * network responses (up to 8 hours).
-     */
-    private val cacheControl by lazy {
-        CacheControl.Builder().maxStale(8, TimeUnit.HOURS).build()
-    }
+    // Create an RSS parser
+    private val rssParser = RssParser()
 
     /**
      * Returns a [Flow] which fetches each podcast feed and emits it in turn.
@@ -88,21 +73,12 @@ class PodcastsFetcher @Inject constructor(
 
     private suspend fun fetchPodcast(url: String): PodcastRssResponse {
         return withContext(ioDispatcher) {
-            val request = Request.Builder()
-                .url(url)
-                .cacheControl(cacheControl)
-                .build()
-
-            val response = okHttpClient.newCall(request).execute()
-
-            // If the network request wasn't successful, throw an exception
-            if (!response.isSuccessful) throw HttpException(response)
-
-            // Otherwise we can parse the response using a Rome SyndFeedInput, then map it
-            // to a Podcast instance. We run this on the IO dispatcher since the parser is reading
-            // from a stream.
-            response.body!!.use { body ->
-                syndFeedInput.build(body.charStream()).toPodcastResponse(url)
+            try {
+                // Use RSS-Parser to fetch and parse the feed
+                val rssChannel = rssParser.getRssChannel(url)
+                rssChannel.toPodcastResponse(url)
+            } catch (e: Exception) {
+                PodcastRssResponse.Error(e)
             }
         }
     }
@@ -115,50 +91,118 @@ sealed class PodcastRssResponse {
 }
 
 /**
- * Map a Rome [SyndFeed] instance to our own [Podcast] data class.
+ * Map an RSS-Parser [RssChannel] instance to our own [PodcastRssResponse] data class.
  */
-private fun SyndFeed.toPodcastResponse(feedUrl: String): PodcastRssResponse {
-    val podcastUri = uri ?: feedUrl
-    val episodes = entries.map { it.toEpisode(podcastUri, it.enclosures) }
+private fun RssChannel.toPodcastResponse(feedUrl: String): PodcastRssResponse {
+    val podcastUri = link ?: feedUrl
+    val episodes = items.mapNotNull { it.toEpisode(podcastUri) }
 
-    val feedInfo = getModule(PodcastModuleDtd) as? FeedInformation
     val podcast = Podcast(
         uri = podcastUri,
-        title = title,
-        description = feedInfo?.summary ?: description,
-        author = author,
-        copyright = copyright,
-        imageUrl = feedInfo?.imageUri?.toString(),
+        title = title ?: "",
+        description = description,
+        author = itunesChannelData?.author,
+        copyright = null, // RSS-Parser doesn't provide copyright information
+        imageUrl = image?.url ?: itunesChannelData?.image,
     )
 
-    val categories = feedInfo?.categories
-        ?.map { Category(name = it.name) }
+    // Extract categories from iTunes data if available
+    val categories = itunesChannelData?.categories
+        ?.map { Category(name = it) }
         ?.toSet() ?: emptySet()
 
     return PodcastRssResponse.Success(podcast, episodes, categories)
 }
 
 /**
- * Map a Rome [SyndEntry] instance to our own [Episode] data class.
+ * Map an RSS-Parser [RssItem] instance to our own [Episode] data class.
  */
-private fun SyndEntry.toEpisode(podcastUri: String, enclosures: List<SyndEnclosure>): Episode {
-    val entryInformation = getModule(PodcastModuleDtd) as? EntryInformation
+private fun RssItem.toEpisode(podcastUri: String): Episode? {
+    // Parse the publication date
+    val publishedDate = try {
+        pubDate?.let { dateString ->
+            // Try to parse the date string to an OffsetDateTime
+            val instant = parseRssDate(dateString)
+            instant?.atOffset(ZoneOffset.UTC)
+        }
+    } catch (e: Exception) {
+        null
+    }
+
+    // If we couldn't parse the date, return null as we need a valid date
+    if (publishedDate == null) return null
+
     return Episode(
-        uri = uri,
+        uri = guid ?: link ?: return null, // Need at least a guid or link
         podcastUri = podcastUri,
-        title = title,
+        title = title ?: return null, // Need a title
         author = author,
-        summary = entryInformation?.summary ?: description?.value,
-        subtitle = entryInformation?.subtitle,
-        published = Instant.ofEpochMilli(publishedDate.time).atOffset(ZoneOffset.UTC),
-        duration = entryInformation?.duration?.milliseconds?.let { Duration.ofMillis(it) },
-        mediaUrls = enclosures.map { it.url },
+        summary = description ?: content,
+        subtitle = itunesItemData?.subtitle,
+        published = publishedDate,
+        duration = itunesItemData?.duration?.let { parseDuration(it) },
+        mediaUrls = listOfNotNull(audio, rawEnclosure?.url),
     )
 }
 
 /**
- * Most feeds use the following DTD to include extra information related to
- * their podcast. Info such as images, summaries, duration, categories is sometimes only available
- * via this attributes in this DTD.
+ * Parse a duration string from iTunes format to a Duration object.
  */
-private const val PodcastModuleDtd = "http://www.itunes.com/dtds/podcast-1.0.dtd"
+private fun parseDuration(durationStr: String): Duration? {
+    return try {
+        // Handle different formats: HH:MM:SS, MM:SS, or seconds
+        val parts = durationStr.split(":")
+        when (parts.size) {
+            3 -> {
+                // HH:MM:SS format
+                val hours = parts[0].toLongOrNull() ?: 0
+                val minutes = parts[1].toLongOrNull() ?: 0
+                val seconds = parts[2].toLongOrNull() ?: 0
+                Duration.ofSeconds(hours * 3600 + minutes * 60 + seconds)
+            }
+            2 -> {
+                // MM:SS format
+                val minutes = parts[0].toLongOrNull() ?: 0
+                val seconds = parts[1].toLongOrNull() ?: 0
+                Duration.ofSeconds(minutes * 60 + seconds)
+            }
+            1 -> {
+                // Just seconds
+                val seconds = parts[0].toLongOrNull() ?: 0
+                Duration.ofSeconds(seconds)
+            }
+            else -> null
+        }
+    } catch (e: Exception) {
+        null
+    }
+}
+
+/**
+ * Parse an RSS date string to an Instant.
+ */
+private fun parseRssDate(dateString: String): Instant? {
+    // RSS feeds use various date formats, try multiple patterns
+    val patterns = listOf(
+        "EEE, dd MMM yyyy HH:mm:ss Z",
+        "EEE, dd MMM yyyy HH:mm:ss zzz",
+        "yyyy-MM-dd'T'HH:mm:ssX",
+        "yyyy-MM-dd'T'HH:mm:ss.SSSX",
+    )
+
+    for (pattern in patterns) {
+        try {
+            val formatter = DateTimeFormatter.ofPattern(pattern, Locale.ENGLISH)
+            return OffsetDateTime.parse(dateString, formatter).toInstant()
+        } catch (e: Exception) {
+            // Try next pattern
+        }
+    }
+
+    // If all patterns fail, try a last resort approach
+    return try {
+        Instant.parse(dateString)
+    } catch (e: Exception) {
+        null
+    }
+}

@@ -35,7 +35,6 @@ import com.example.jetcaster.core.data.repository.LocalCategoryStore
 import com.example.jetcaster.core.data.repository.LocalEpisodeStore
 import com.example.jetcaster.core.data.repository.LocalPodcastStore
 import com.example.jetcaster.core.data.repository.PodcastStore
-import com.rometools.rome.io.SyndFeedInput
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -101,10 +100,6 @@ object DataDiModule {
     @Provides
     @Singleton
     fun provideTransactionRunner(database: JetcasterDatabase): TransactionRunner = database.transactionRunnerDao()
-
-    @Provides
-    @Singleton
-    fun provideSyndFeedInput() = SyndFeedInput()
 
     @Provides
     @Dispatcher(JetcasterDispatchers.IO)
