@@ -158,10 +158,10 @@ dependencies {
 
     implementation(libs.coil.kt.compose)
 
-    implementation(projects.core.data)
-    implementation(projects.core.designsystem)
-    implementation(projects.core.domain)
-    implementation(projects.core.domainTesting)
+    implementation(projects.sharedLogic.data)
+    implementation(projects.sharedLogic.designsystem)
+    implementation(projects.sharedLogic.domain)
+    implementation(projects.sharedLogic.domainTesting)
     implementation(projects.sharedUi)
 
     coreLibraryDesugaring(libs.core.jdk.desugaring)

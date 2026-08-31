@@ -40,10 +40,10 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(projects.core.data)
-            api(projects.core.domain)
-            api(projects.core.designsystem)
-            implementation(projects.core.domainTesting)
+            api(projects.sharedLogic.data)
+            api(projects.sharedLogic.domain)
+            api(projects.sharedLogic.designsystem)
+            implementation(projects.sharedLogic.domainTesting)
 
             implementation(libs.kotlinx.coroutines.core)
 

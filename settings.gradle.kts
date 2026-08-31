@@ -30,12 +30,12 @@ dependencyResolutionManagement {
 rootProject.name = "Jetcaster"
 
 include(
-    ":mobile",
+    ":androidApp",
     ":sharedUi",
-    ":core:data",
-    ":core:data-testing",
-    ":core:domain",
-    ":core:domain-testing",
-    ":core:designsystem"
+    ":sharedLogic:data",
+    ":sharedLogic:data-testing",
+    ":sharedLogic:domain",
+    ":sharedLogic:domain-testing",
+    ":sharedLogic:designsystem"
 )
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")

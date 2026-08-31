@@ -21,7 +21,7 @@ plugins {
 
 kotlin {
     android {
-        namespace = "com.example.jetcaster.core.data.testing"
+        namespace = "com.example.jetcaster.core.domain.testing"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
@@ -36,8 +36,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(projects.core.data)
-            implementation(libs.kotlinx.coroutines.core)
+            implementation(projects.sharedLogic.domain)
+            implementation(libs.kotlinx.datetime)
         }
     }
 }
