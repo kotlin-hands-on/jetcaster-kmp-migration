@@ -28,12 +28,15 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.adaptive.WindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.jetcaster.R
+import com.example.jetcaster.shared.Res
+import com.example.jetcaster.shared.connection_error_message
+import com.example.jetcaster.shared.connection_error_title
+import com.example.jetcaster.shared.retry_label
 import com.example.jetcaster.ui.home.MainScreen
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -79,11 +82,11 @@ fun JetcasterApp(
 fun OfflineDialog(onRetry: () -> Unit) {
     AlertDialog(
         onDismissRequest = {},
-        title = { Text(text = stringResource(R.string.connection_error_title)) },
-        text = { Text(text = stringResource(R.string.connection_error_message)) },
+        title = { Text(text = stringResource(Res.string.connection_error_title)) },
+        text = { Text(text = stringResource(Res.string.connection_error_message)) },
         confirmButton = {
             TextButton(onClick = onRetry) {
-                Text(stringResource(R.string.retry_label))
+                Text(stringResource(Res.string.retry_label))
             }
         },
     )
