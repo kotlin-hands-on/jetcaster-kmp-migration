@@ -63,6 +63,7 @@ import com.example.jetcaster.shared.ic_delete
 import com.example.jetcaster.shared.ic_more_vert
 import com.example.jetcaster.shared.ic_play_circle
 import com.example.jetcaster.shared.ic_playlist_add
+import com.example.jetcaster.ui.theme.JetcasterTheme
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.format.FormatStringsInDatetimeFormats
@@ -177,7 +178,8 @@ private fun EpisodeListItemFooter(
                 .semantics { role = Role.Button },
         )
 
-        val localPublishedDateTime = episode.published.toLocalDateTime(TimeZone.currentSystemDefault()) //TODO: Check conversion
+        val localPublishedDateTime =
+            episode.published.toLocalDateTime(TimeZone.currentSystemDefault()) //TODO: Check conversion
         val dateTimeFormat = LocalDateTime.Format {
             byUnicodePattern("uuuu/MM/dd' 'HH:mm")
         }
@@ -297,7 +299,11 @@ private fun EpisodeListItemHeader(
 }
 
 @Composable
-private fun EpisodeListItemImage(podcast: PodcastInfo, modifier: Modifier = Modifier, imageModifier: Modifier = Modifier) {
+private fun EpisodeListItemImage(
+    podcast: PodcastInfo,
+    modifier: Modifier = Modifier,
+    imageModifier: Modifier = Modifier
+) {
     PodcastImage(
         podcastImageUrl = podcast.imageUrl,
         contentDescription = null,
@@ -318,13 +324,13 @@ private fun EpisodeListItemImage(podcast: PodcastInfo, modifier: Modifier = Modi
 )
 @Composable
 private fun EpisodeListItemPreview() {
-//    JetcasterTheme {      // TODO we haven't migrated the theme to CMP to try migrating just one screen without the overall plumbing
-    EpisodeListItem(
-        episode = PreviewEpisodes[0],
-        podcast = PreviewPodcasts[0],
-        onClick = {},
-        onQueueEpisode = {},
-        showSummary = true,
-    )
+    JetcasterTheme {
+        EpisodeListItem(
+            episode = PreviewEpisodes[0],
+            podcast = PreviewPodcasts[0],
+            onClick = {},
+            onQueueEpisode = {},
+            showSummary = true,
+        )
+    }
 }
-//}
