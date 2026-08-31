@@ -19,7 +19,6 @@ package com.example.jetcaster.core.data.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import java.time.OffsetDateTime
-import java.util.Objects
 
 class PodcastWithExtraInfo {
     @Embedded
@@ -50,5 +49,10 @@ class PodcastWithExtraInfo {
         else -> false
     }
 
-    override fun hashCode(): Int = Objects.hash(podcast, lastEpisodeDate, isFollowed)
+    override fun hashCode(): Int {
+        var result = isFollowed.hashCode()
+        result = 31 * result + podcast.hashCode()
+        result = 31 * result + (lastEpisodeDate?.hashCode() ?: 0)
+        return result
+    }
 }

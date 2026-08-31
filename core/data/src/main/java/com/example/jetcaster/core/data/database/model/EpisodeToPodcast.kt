@@ -20,7 +20,6 @@ import androidx.compose.runtime.Immutable
 import androidx.room.Embedded
 import androidx.room.Ignore
 import androidx.room.Relation
-import java.util.Objects
 
 @Immutable
 class EpisodeToPodcast {
@@ -46,5 +45,9 @@ class EpisodeToPodcast {
         else -> false
     }
 
-    override fun hashCode(): Int = Objects.hash(episode, _podcasts)
+    override fun hashCode(): Int {
+        var result = episode.hashCode()
+        result = 31 * result + _podcasts.hashCode()
+        return result
+    }
 }
