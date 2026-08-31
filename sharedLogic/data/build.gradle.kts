@@ -65,6 +65,7 @@ kotlin {
         }
 
         iosMain.dependencies {
+            implementation(libs.konnectivity)
             implementation(libs.androidx.sqlite.bundled)
         }
     }
