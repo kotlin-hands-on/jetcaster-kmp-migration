@@ -15,7 +15,6 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         snapshotVersion?.let {
             println("https://androidx.dev/snapshots/builds/$it/artifacts/repository/") 
@@ -32,6 +31,7 @@ rootProject.name = "Jetcaster"
 include(
     ":androidApp",
     ":desktopApp",
+    ":wasmApp",
     ":sharedUi",
     ":sharedLogic:data",
     ":sharedLogic:data-testing",

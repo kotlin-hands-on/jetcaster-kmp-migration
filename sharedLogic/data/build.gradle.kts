@@ -36,6 +36,11 @@ kotlin {
     // Desktop target (JVM)
     jvm()
 
+    // Browser target (WASM)
+    wasmJs {
+        browser()
+    }
+
     sourceSets {
         commonMain.dependencies {
             // We need @Immutable annotations here
@@ -68,6 +73,14 @@ kotlin {
             implementation(libs.konnectivity)
             implementation(libs.androidx.sqlite.bundled)
         }
+
+        wasmJsMain.dependencies {
+            // The browser has no file system, so SQLite runs in a web worker with OPFS
+            implementation(libs.androidx.sqlite.web)
+            implementation(npm("sqlite-wasm-worker", layout.projectDirectory.dir("worker").asFile))
+            implementation(libs.kotlinx.browser)
+            implementation(libs.kotlinx.coroutines.core.wasm.js)
+        }
     }
 }
 
@@ -80,4 +93,5 @@ dependencies {
     add("kspJvm", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
     add("kspIosSimulatorArm64", libs.androidx.room.compiler)
+    add("kspWasmJs", libs.androidx.room.compiler)
 }

@@ -32,7 +32,6 @@ import com.example.jetcaster.core.data.repository.PodcastStore
 import com.example.jetcaster.core.data.repository.PodcastsRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.IO
 import org.koin.dsl.module
 
 // TODO we should name this module properly
@@ -52,7 +51,7 @@ val otherModule = module {
         }
     }
 
-    single<CoroutineDispatcher>(ioDispatcher) { Dispatchers.IO }
+    single<CoroutineDispatcher>(ioDispatcher) { provideIoDispatcher() }
     single<CoroutineDispatcher>(mainDispatcher) { Dispatchers.Main }
 
     single<EpisodeStore> { LocalEpisodeStore(get()) }

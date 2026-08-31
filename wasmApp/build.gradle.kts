@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 /*
  * Copyright 2025 The Android Open Source Project
  *
@@ -16,33 +20,19 @@
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
 }
 
 kotlin {
-    android {
-        namespace = "com.example.jetcaster.core.domain.testing"
-        compileSdk = libs.versions.android.compileSdk.get().toInt()
-        minSdk = libs.versions.android.minSdk.get().toInt()
-    }
-
-    jvmToolchain(17)
-
-    iosArm64()
-    iosSimulatorArm64()
-
-    // Desktop target (JVM)
-    jvm()
-
-    // Browser target (WASM)
     wasmJs {
         browser()
+        binaries.executable()
     }
 
     sourceSets {
-        commonMain.dependencies {
-            implementation(projects.sharedLogic.domain)
-            implementation(libs.kotlinx.datetime)
+        wasmJsMain.dependencies {
+            implementation(projects.sharedUi)
         }
     }
 }

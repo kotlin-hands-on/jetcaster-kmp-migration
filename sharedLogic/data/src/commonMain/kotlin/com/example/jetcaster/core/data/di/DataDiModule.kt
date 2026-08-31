@@ -17,7 +17,6 @@
 package com.example.jetcaster.core.data.di
 
 import androidx.room3.RoomDatabase
-import androidx.sqlite.driver.bundled.BundledSQLiteDriver
 import com.example.jetcaster.core.data.database.JetcasterDatabase
 import org.koin.core.module.Module
 import org.koin.dsl.module
@@ -32,7 +31,7 @@ val dataModule = module {
             // This is not recommended for normal apps, but the goal of this sample isn't to
             // showcase all of Room.
             .fallbackToDestructiveMigration(true)
-            .setDriver(BundledSQLiteDriver())
+            .setDriver(createSQLiteDriver())
             .build()
     }
 }
