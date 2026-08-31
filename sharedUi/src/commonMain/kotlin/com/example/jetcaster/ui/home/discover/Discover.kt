@@ -33,10 +33,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.jetcaster.R
 import com.example.jetcaster.core.model.CategoryInfo
 import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.FilterableCategoriesModel
@@ -46,6 +43,11 @@ import com.example.jetcaster.core.player.model.PlayerEpisode
 import com.example.jetcaster.core.designsystem.theme.Keyline1
 import com.example.jetcaster.ui.home.category.podcastCategory
 import com.example.jetcaster.util.fullWidthItem
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import com.example.jetcaster.shared.Res
+import com.example.jetcaster.shared.cd_selected_category
+import com.example.jetcaster.shared.ic_check
 
 fun LazyGridScope.discoverItems(
     filterableCategoriesModel: FilterableCategoriesModel,
@@ -121,8 +123,8 @@ private fun ChoiceChipContent(text: String, selected: Boolean, onClick: () -> Un
         leadingIcon = {
             if (selected) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_check),
-                    contentDescription = stringResource(id = R.string.cd_selected_category),
+                    painter = painterResource(Res.drawable.ic_check),
+                    contentDescription = stringResource(Res.string.cd_selected_category),
                     modifier = Modifier.height(18.dp),
                 )
             }

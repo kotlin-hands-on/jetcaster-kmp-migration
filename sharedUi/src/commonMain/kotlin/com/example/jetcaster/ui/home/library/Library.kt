@@ -23,15 +23,16 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.jetcaster.R
+import com.example.jetcaster.shared.Res
 import com.example.jetcaster.core.model.EpisodeInfo
 import com.example.jetcaster.core.model.LibraryInfo
 import com.example.jetcaster.core.player.model.PlayerEpisode
 import com.example.jetcaster.core.designsystem.theme.Keyline1
+import com.example.jetcaster.shared.latest_episodes
 import com.example.jetcaster.shared.ui.EpisodeListItem
 import com.example.jetcaster.util.fullWidthItem
+import org.jetbrains.compose.resources.stringResource
 
 fun LazyGridScope.libraryItems(
     library: LibraryInfo,
@@ -41,7 +42,7 @@ fun LazyGridScope.libraryItems(
 ) {
     fullWidthItem {
         Text(
-            text = stringResource(id = R.string.latest_episodes),
+            text = stringResource(Res.string.latest_episodes),
             modifier = Modifier.padding(
                 start = Keyline1,
                 top = 16.dp,

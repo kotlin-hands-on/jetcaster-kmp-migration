@@ -98,6 +98,3 @@ fun OfflineDialog(onRetry: () -> Unit) {
         },
     )
 }
-
-val LocalAnimatedVisibilityScope = compositionLocalOf<AnimatedVisibilityScope?> { null }
-val LocalSharedTransitionScope = compositionLocalOf<SharedTransitionScope?> { null }

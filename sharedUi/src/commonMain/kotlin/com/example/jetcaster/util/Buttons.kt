@@ -32,10 +32,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.jetcaster.R
+import com.example.jetcaster.shared.Res
+import com.example.jetcaster.shared.cd_following
+import com.example.jetcaster.shared.cd_not_following
+import com.example.jetcaster.shared.ic_add
+import com.example.jetcaster.shared.ic_check
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -78,12 +82,12 @@ fun ToggleFollowPodcastIconButton(isFollowed: Boolean, onClick: () -> Unit, modi
         Icon(
             // Animated rotation when follow state changes
             painter = when {
-                isFollowed -> painterResource(id = R.drawable.ic_check)
-                else -> painterResource(id = R.drawable.ic_add)
+                isFollowed -> painterResource(Res.drawable.ic_check)
+                else -> painterResource(Res.drawable.ic_add)
             },
             contentDescription = when {
-                isFollowed -> stringResource(R.string.cd_following)
-                else -> stringResource(R.string.cd_not_following)
+                isFollowed -> stringResource(Res.string.cd_following)
+                else -> stringResource(Res.string.cd_not_following)
             },
             modifier = Modifier.rotate(iconRotation),
         )

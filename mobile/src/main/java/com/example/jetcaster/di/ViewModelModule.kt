@@ -25,16 +25,6 @@ import org.koin.dsl.module
  * Koin module for providing ViewModels
  */
 val viewModelModule = module {
-    viewModel {
-        HomeViewModel(
-            podcastsRepository = get(),
-            podcastStore = get(),
-            episodeStore = get(),
-            podcastCategoryFilterUseCase = get(),
-            filterableCategoriesUseCase = get(),
-            episodePlayer = get(),
-        )
-    }
 
     viewModel {
         PlayerViewModel(

@@ -16,7 +16,6 @@
 
 package com.example.jetcaster.ui.home
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -79,20 +78,18 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.backhandler.BackHandler
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.window.core.layout.WindowSizeClass
-import com.example.jetcaster.R
 import com.example.jetcaster.core.domain.testing.PreviewCategories
 import com.example.jetcaster.core.domain.testing.PreviewPodcastEpisodes
 import com.example.jetcaster.core.domain.testing.PreviewPodcasts
@@ -102,30 +99,51 @@ import com.example.jetcaster.core.model.LibraryInfo
 import com.example.jetcaster.core.model.PodcastCategoryFilterResult
 import com.example.jetcaster.core.model.PodcastInfo
 import com.example.jetcaster.core.designsystem.component.PodcastImage
+import com.example.jetcaster.shared.Res
+import com.example.jetcaster.shared.an_error_has_occurred
+import com.example.jetcaster.shared.cd_account
+import com.example.jetcaster.shared.discover_toolbar
+import com.example.jetcaster.shared.discover_toolbar_content_description
+import com.example.jetcaster.shared.episode_added_to_your_queue
+import com.example.jetcaster.shared.genres
+import com.example.jetcaster.shared.ic_account_circle
+import com.example.jetcaster.shared.ic_library_music
+import com.example.jetcaster.shared.ic_search
+import com.example.jetcaster.shared.library_toolbar
+import com.example.jetcaster.shared.library_toolbar_content_description
+import com.example.jetcaster.shared.retry_label
+import com.example.jetcaster.shared.search_for_a_podcast
+import com.example.jetcaster.shared.updated_days_ago
+import com.example.jetcaster.shared.updated_longer
+import com.example.jetcaster.shared.updated_today
+import com.example.jetcaster.shared.updated_weeks_ago
 import com.example.jetcaster.ui.home.discover.discoverItems
 import com.example.jetcaster.ui.home.library.libraryItems
 import com.example.jetcaster.ui.podcast.PodcastDetailsScreen
 import com.example.jetcaster.ui.theme.JetcasterTheme
-import com.example.jetcaster.ui.tooling.DevicePreviews
 import com.example.jetcaster.util.ToggleFollowPodcastIconButton
 import com.example.jetcaster.util.fullWidthItem
 import com.example.jetcaster.util.isCompact
-import com.example.jetcaster.util.quantityStringResource
 import com.example.jetcaster.util.radialGradientScrim
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.koinViewModel
-import org.koin.core.parameter.parametersOf
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.viewmodel.koinViewModel
 
 @OptIn(ExperimentalMaterial3AdaptiveApi::class)
 private fun <T> ThreePaneScaffoldNavigator<T>.isMainPaneHidden(): Boolean =
     scaffoldValue[SupportingPaneScaffoldRole.Main] == PaneAdaptedValue.Hidden
 
 /**
- * Copied from `calculatePaneScaffoldDirective()` in [PaneScaffoldDirective], with modifications to
+ * Copied from `calculatePaneScaffoldDirective()` in [androidx.compose.material3.adaptive.layout.PaneScaffoldDirective], with modifications to
  * only show 1 pane horizontally if either width or height size class is compact.
  */
 fun calculateScaffoldDirective(
@@ -171,7 +189,7 @@ fun calculateScaffoldDirective(
 }
 
 /**
- * Copied from `getExcludedVerticalBounds()` in [PaneScaffoldDirective] since it is private.
+ * Copied from `getExcludedVerticalBounds()` in [androidx.compose.material3.adaptive.layout.PaneScaffoldDirective] since it is private.
  */
 private fun getExcludedVerticalBounds(posture: Posture, hingePolicy: HingePolicy): List<Rect> = when (hingePolicy) {
     HingePolicy.AvoidSeparating -> posture.separatingVerticalHingeBounds
@@ -207,11 +225,11 @@ private fun HomeScreenError(onRetry: () -> Unit, modifier: Modifier = Modifier) 
             modifier = Modifier.fillMaxSize(),
         ) {
             Text(
-                text = stringResource(id = R.string.an_error_has_occurred),
+                text = stringResource(Res.string.an_error_has_occurred),
                 modifier = Modifier.padding(16.dp),
             )
             Button(onClick = onRetry) {
-                Text(text = stringResource(id = R.string.retry_label))
+                Text(text = stringResource(Res.string.retry_label))
             }
         }
     }
@@ -225,14 +243,14 @@ fun HomeScreenErrorPreview() {
     }
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class)
+@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalComposeUiApi::class)
 @Composable
 private fun HomeScreenReady(
     uiState: HomeScreenUiState,
     windowSizeClass: WindowSizeClass,
     navigateToPlayer: (EpisodeInfo) -> Unit,
     viewModel: HomeViewModel = koinViewModel(),
-    ) {
+) {
     val navigator = rememberSupportingPaneScaffoldNavigator<String>(
         scaffoldDirective = calculateScaffoldDirective(currentWindowAdaptiveInfo()),
     )
@@ -313,18 +331,18 @@ private fun HomeAppBar(isExpanded: Boolean, modifier: Modifier = Modifier) {
                     onExpandedChange = {},
                     enabled = true,
                     placeholder = {
-                        Text(stringResource(id = R.string.search_for_a_podcast))
+                        Text(stringResource(Res.string.search_for_a_podcast))
                     },
                     leadingIcon = {
                         Icon(
-                            painterResource(id = R.drawable.ic_search),
+                            painterResource(Res.drawable.ic_search),
                             contentDescription = null,
                         )
                     },
                     trailingIcon = {
                         Icon(
-                            painterResource(id = R.drawable.ic_account_circle),
-                            contentDescription = stringResource(R.string.cd_account),
+                            painterResource(Res.drawable.ic_account_circle),
+                            contentDescription = stringResource(Res.string.cd_account),
                         )
                     },
                     interactionSource = null,
@@ -356,7 +374,7 @@ private fun HomeScreenBackground(modifier: Modifier = Modifier, content: @Compos
 private fun HomeScreen(
     isHomeAppBarExpanded: Boolean,
     isLoading: Boolean,
-    featuredPodcasts: ImmutableList<PodcastInfo>,
+    featuredPodcasts: PersistentList<PodcastInfo>,
     selectedHomeCategory: HomeCategory,
     homeCategories: List<HomeCategory>,
     filterableCategoriesModel: FilterableCategoriesModel,
@@ -401,7 +419,7 @@ private fun HomeScreen(
             containerColor = Color.Transparent,
         ) { contentPadding ->
             // Main Content
-            val snackBarText = stringResource(id = R.string.episode_added_to_your_queue)
+            val snackBarText = stringResource(Res.string.episode_added_to_your_queue)
             val showHomeCategoryTabs = featuredPodcasts.isNotEmpty() && homeCategories.isNotEmpty()
             HomeContent(
                 featuredPodcasts = featuredPodcasts,
@@ -433,7 +451,7 @@ private fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3AdaptiveApi::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun PillToolbar(selectedHomeCategory: HomeCategory, onHomeAction: (HomeAction) -> Unit, modifier: Modifier = Modifier) {
     HorizontalFloatingToolbar(
@@ -471,13 +489,13 @@ fun PillToolbar(selectedHomeCategory: HomeCategory, onHomeAction: (HomeAction) -
             ) {
                 Row(Modifier) {
                     Icon(
-                        painterResource(id = R.drawable.ic_library_music),
+                        painterResource(Res.drawable.ic_library_music),
                         modifier = Modifier.padding(end = 8.dp),
                         contentDescription = stringResource(
-                            R.string.library_toolbar_content_description,
+                            Res.string.library_toolbar_content_description,
                         ),
                     )
-                    Text(stringResource(R.string.library_toolbar))
+                    Text(stringResource(Res.string.library_toolbar))
                 }
             }
 
@@ -506,13 +524,13 @@ fun PillToolbar(selectedHomeCategory: HomeCategory, onHomeAction: (HomeAction) -
             ) {
                 Row {
                     Icon(
-                        painterResource(R.drawable.genres),
+                        painterResource(Res.drawable.genres),
                         modifier = Modifier.padding(end = 8.dp),
                         contentDescription = stringResource(
-                            R.string.discover_toolbar_content_description,
+                            Res.string.discover_toolbar_content_description,
                         ),
                     )
-                    Text(stringResource(R.string.discover_toolbar))
+                    Text(stringResource(Res.string.discover_toolbar))
                 }
             }
         },
@@ -521,7 +539,7 @@ fun PillToolbar(selectedHomeCategory: HomeCategory, onHomeAction: (HomeAction) -
 
 @Composable
 private fun HomeContent(
-    featuredPodcasts: ImmutableList<PodcastInfo>,
+    featuredPodcasts: PersistentList<PodcastInfo>,
     selectedHomeCategory: HomeCategory,
     filterableCategoriesModel: FilterableCategoriesModel,
     podcastCategoryFilterResult: PodcastCategoryFilterResult,
@@ -555,7 +573,7 @@ private fun HomeContent(
 
 @Composable
 private fun HomeContentGrid(
-    featuredPodcasts: ImmutableList<PodcastInfo>,
+    featuredPodcasts: PersistentList<PodcastInfo>,
     selectedHomeCategory: HomeCategory,
     filterableCategoriesModel: FilterableCategoriesModel,
     podcastCategoryFilterResult: PodcastCategoryFilterResult,
@@ -613,7 +631,7 @@ private fun HomeContentGrid(
 
 @Composable
 private fun FollowedPodcastItem(
-    items: ImmutableList<PodcastInfo>,
+    items: PersistentList<PodcastInfo>,
     onPodcastUnfollowed: (PodcastInfo) -> Unit,
     navigateToPodcastDetails: (PodcastInfo) -> Unit,
     modifier: Modifier = Modifier,
@@ -635,7 +653,7 @@ private fun FollowedPodcastItem(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun FollowedPodcasts(
-    items: ImmutableList<PodcastInfo>,
+    items: PersistentList<PodcastInfo>,
     onPodcastUnfollowed: (PodcastInfo) -> Unit,
     navigateToPodcastDetails: (PodcastInfo) -> Unit,
     modifier: Modifier = Modifier,
@@ -698,7 +716,11 @@ private fun FollowedPodcastCarouselItem(
             isFollowed = true, /* All podcasts are followed in this feed */
             modifier = Modifier.align(Alignment.TopStart),
         )
-        Box(modifier = Modifier.matchParentSize().background(gradient))
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(gradient),
+        )
         if (lastEpisodeDateText != null) {
             Text(
                 text = lastEpisodeDateText,
@@ -720,16 +742,16 @@ private fun lastUpdated(updated: Instant): String {
     val days = duration.inWholeDays.toInt()
 
     return when {
-        days > 28 -> stringResource(R.string.updated_longer)
+        days > 28 -> stringResource(Res.string.updated_longer)
 
         days >= 7 -> {
             val weeks = days / 7
-            quantityStringResource(R.plurals.updated_weeks_ago, weeks, weeks)
+            pluralStringResource(Res.plurals.updated_weeks_ago, weeks, weeks)
         }
 
-        days > 0 -> quantityStringResource(R.plurals.updated_days_ago, days, days)
+        days > 0 -> pluralStringResource(Res.plurals.updated_days_ago, days, days)
 
-        else -> stringResource(R.string.updated_today)
+        else -> stringResource(Res.string.updated_today)
     }
 }
 
@@ -743,14 +765,14 @@ private fun HomeAppBarPreview() {
     }
 }
 
-@DevicePreviews
+@Preview
 @Composable
 private fun PreviewHome() {
     JetcasterTheme {
         HomeScreen(
             isHomeAppBarExpanded = true,
             isLoading = true,
-            featuredPodcasts = PreviewPodcasts.toImmutableList(),
+            featuredPodcasts = PreviewPodcasts.toPersistentList(),
             homeCategories = HomeCategory.entries,
             selectedHomeCategory = HomeCategory.Discover,
             filterableCategoriesModel = FilterableCategoriesModel(

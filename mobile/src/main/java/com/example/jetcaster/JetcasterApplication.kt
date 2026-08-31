@@ -17,10 +17,13 @@
 package com.example.jetcaster
 
 import android.app.Application
+import androidx.compose.runtime.Composer
+import androidx.compose.runtime.ExperimentalComposeRuntimeApi
 import com.example.jetcaster.core.data.di.dataModule
 import com.example.jetcaster.core.data.di.otherModule
 import com.example.jetcaster.core.di.domainModule
 import com.example.jetcaster.di.viewModelModule
+import com.example.jetcaster.shared.di.initJetcasterDi
 import com.example.jetcaster.shared.di.jetcasterDiModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -33,17 +36,14 @@ class JetcasterApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        // Initialize Koin
-        startKoin {
+        @OptIn(ExperimentalComposeRuntimeApi::class)
+        Composer.setDiagnosticStackTraceEnabled(BuildConfig.DEBUG)
+
+
+        initJetcasterDi {
             androidLogger()
             androidContext(this@JetcasterApplication)
-            modules(
-                dataModule,
-                otherModule,
-                domainModule,
-                viewModelModule,
-                jetcasterDiModule,
-            )
+            modules(viewModelModule)
         }
     }
 }
