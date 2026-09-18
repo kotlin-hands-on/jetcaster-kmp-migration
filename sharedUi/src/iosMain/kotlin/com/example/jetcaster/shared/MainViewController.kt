@@ -1,13 +1,10 @@
 package com.example.jetcaster.shared
 
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.ui.window.ComposeUIViewController
-import androidx.navigation.compose.composable
 import com.example.jetcaster.core.data.network.OnlineChecker
 import com.example.jetcaster.shared.di.initJetcasterDi
 import com.example.jetcaster.ui.JetcasterApp
-import com.example.jetcaster.ui.Screen
 import com.example.jetcaster.ui.rememberJetcasterAppState
 import com.example.jetcaster.ui.theme.JetcasterTheme
 import org.koin.compose.koinInject
@@ -23,7 +20,7 @@ fun MainViewController(): UIViewController {
         JetcasterTheme {
             JetcasterApp(
                 adaptiveInfo = adaptiveInfo,
-                appState = appState
+                appState = appState,
             )
         }
     }

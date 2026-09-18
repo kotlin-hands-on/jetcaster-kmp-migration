@@ -17,11 +17,10 @@
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
-    alias(libs.plugins.ksp)
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.example.jetcaster.core.domain"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -73,19 +72,8 @@ kotlin {
             implementation(libs.androidx.test.ext.junit)
         }
 
-        iosMain.dependencies {
-        }
-
         jvmMain.dependencies {
             implementation(libs.kotlinx.coroutines.swing)
         }
     }
-}
-
-dependencies {
-    add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
-    add("kspIosArm64", libs.androidx.room.compiler)
-    add("kspJvm", libs.androidx.room.compiler)
-    add("kspWasmJs", libs.androidx.room.compiler)
 }

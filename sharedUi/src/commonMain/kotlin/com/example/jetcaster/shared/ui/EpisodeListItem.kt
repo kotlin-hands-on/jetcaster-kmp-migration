@@ -196,6 +196,7 @@ private fun EpisodeListItemFooter(
                         duration.toInt(DurationUnit.MINUTES),
                     )
                 }
+
                 // Otherwise we just use the date
                 else -> {
                     LocalDateTime.Format {

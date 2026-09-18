@@ -20,7 +20,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.example.jetcaster.core.domain.testing"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -28,6 +28,10 @@ kotlin {
 
     jvmToolchain(17)
 
+    iosArm64()
+    iosSimulatorArm64()
+
+    // Desktop target (JVM)
     jvm()
 
     // Browser target (WASM)
@@ -35,14 +39,10 @@ kotlin {
         browser()
     }
 
-    iosArm64()
-    iosSimulatorArm64()
-
     sourceSets {
         commonMain.dependencies {
             implementation(projects.sharedLogic.domain)
             implementation(libs.kotlinx.datetime)
-            implementation(libs.kotlinx.coroutines.core)
         }
     }
 }

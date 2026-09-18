@@ -26,6 +26,7 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Jetcaster"
+
 include(
     ":androidApp",
     ":desktopApp",

@@ -8,21 +8,17 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.example.jetcaster.sharedui"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
 
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_11
+            jvmTarget = JvmTarget.JVM_17
         }
 
         androidResources {
             enable = true
-        }
-
-        withHostTest {
-            isIncludeAndroidResources = true
         }
     }
 
@@ -69,13 +65,13 @@ kotlin {
             implementation(libs.compose.material3.adaptive.layout)
             implementation(libs.compose.material3.adaptive.navigation)
             implementation(libs.compose.ui)
-            // TODO this needs to be added, otherwise BackHandler build fails unresolved
+            // Needed explicitly, otherwise BackHandler does not resolve
             implementation(libs.compose.ui.backhandler)
             implementation(libs.compose.components.ui.tooling.preview)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.navigation)
 
-            //Image loading
+            // Image loading
             implementation(libs.coil.kt.compose)
 
             implementation(libs.uri.kmp)

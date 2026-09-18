@@ -22,7 +22,7 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.example.jetcaster.core.designsystem"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
@@ -52,7 +52,7 @@ kotlin {
             implementation(libs.compose.ui)
             implementation(libs.compose.components.resources)
 
-            //Image loading
+            // Image loading
             implementation(libs.coil.kt.compose)
 
             // Dependency injection

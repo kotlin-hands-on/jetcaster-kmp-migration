@@ -24,10 +24,11 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.window.layout.WindowInfoTracker
-import androidx.window.layout.WindowLayoutInfo
 import com.example.jetcaster.core.data.network.OnlineChecker
 import com.example.jetcaster.ui.theme.JetcasterTheme
+import kotlinx.coroutines.flow.map
 import org.koin.compose.koinInject
 
 class MainActivity : ComponentActivity() {
@@ -37,14 +38,16 @@ class MainActivity : ComponentActivity() {
         setContent {
             val adaptiveInfo = currentWindowAdaptiveInfo()
             val appState = rememberJetcasterAppState(onlineChecker = koinInject<OnlineChecker>())
-            val windowLayoutInfo by WindowInfoTracker.getOrCreate(this@MainActivity)
-                .windowLayoutInfo(this@MainActivity)
-                .collectAsState(initial = WindowLayoutInfo(emptyList()))
-            CompositionLocalProvider(LocalDisplayFeatures provides windowLayoutInfo.displayFeatures) {
+            val displayFeatures by remember(this) {
+                WindowInfoTracker.getOrCreate(this@MainActivity)
+                    .windowLayoutInfo(this@MainActivity)
+                    .map { it.displayFeatures }
+            }.collectAsState(initial = emptyList())
+            CompositionLocalProvider(LocalDisplayFeatures provides displayFeatures) {
                 JetcasterTheme {
                     JetcasterApp(
                         adaptiveInfo = adaptiveInfo,
-                        appState = appState
+                        appState = appState,
                     )
                 }
             }
