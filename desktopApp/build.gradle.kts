@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 The Android Open Source Project
+ * Copyright 2025 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,10 @@ plugins {
     alias(libs.plugins.compose.compiler)
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     implementation(projects.sharedUi)
     implementation(compose.desktop.currentOs)
@@ -37,8 +41,7 @@ compose.desktop.application {
         targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
         packageName = "com.example.jetcaster"
         packageVersion = "1.0.0"
-        appResourcesRootDir =
-            layout.projectDirectory.dir("src/main/assets")
+        appResourcesRootDir = layout.projectDirectory.dir("src/main/assets")
         jvmArgs += "-splash:${'$'}APPDIR/resources/logo.gif"
     }
 }

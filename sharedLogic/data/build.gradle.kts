@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.kotlin.multiplatform.library)
@@ -21,19 +22,10 @@ plugins {
 }
 
 kotlin {
-    androidLibrary {
+    android {
         namespace = "com.example.jetcaster.core.data"
         compileSdk = libs.versions.android.compileSdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()
-
-        withHostTestBuilder {
-        }
-
-        withDeviceTestBuilder {
-            sourceSetTreeName = "test"
-        }.configure {
-            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        }
     }
 
     jvmToolchain(17)
@@ -51,9 +43,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            // We need to provide have @Immutable annotations here
+            // We need @Immutable annotations here
             implementation(libs.androidx.compose.runtime.annotation)
-            implementation(libs.androidx.runtime)
 
             // Dependency injection
             implementation(libs.koin.core)
@@ -69,22 +60,9 @@ kotlin {
             implementation(libs.kotlinx.datetime)
         }
 
-        commonTest.dependencies {
-            implementation(libs.kotlinx.test.core)
-            implementation(libs.kotlinx.coroutines.test)
-        }
-
         androidMain.dependencies {
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.androidx.sqlite.bundled)
-        }
-
-        getByName("androidDeviceTest").dependencies {
-            implementation(libs.kotlinx.test.junit)
-            implementation(libs.kotlinx.test.annotations.common)
-            implementation(libs.androidx.test.runner)
-            implementation(libs.androidx.test.core)
-            implementation(libs.androidx.test.ext.junit)
         }
 
         jvmMain.dependencies {
@@ -97,10 +75,9 @@ kotlin {
         }
 
         wasmJsMain.dependencies {
+            // The browser has no file system, so SQLite runs in a web worker with OPFS
             implementation(libs.androidx.sqlite.web)
-            implementation(
-                npm("sqlite-wasm-worker", layout.projectDirectory.dir("worker").asFile)
-            )
+            implementation(npm("sqlite-wasm-worker", layout.projectDirectory.dir("worker").asFile))
             implementation(libs.kotlinx.browser)
             implementation(libs.kotlinx.coroutines.core.wasm.js)
         }
@@ -113,8 +90,8 @@ room3 {
 
 dependencies {
     add("kspAndroid", libs.androidx.room.compiler)
-    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspJvm", libs.androidx.room.compiler)
     add("kspIosArm64", libs.androidx.room.compiler)
+    add("kspIosSimulatorArm64", libs.androidx.room.compiler)
     add("kspWasmJs", libs.androidx.room.compiler)
 }

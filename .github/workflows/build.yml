@@ -99,7 +99,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: desktop-macos-dmg
-          path: sharedUi/build/compose/binaries/main/dmg/*.dmg
+          path: desktopApp/build/compose/binaries/main/dmg/*.dmg
 
   build-desktop-windows:
     name: Build Desktop Windows

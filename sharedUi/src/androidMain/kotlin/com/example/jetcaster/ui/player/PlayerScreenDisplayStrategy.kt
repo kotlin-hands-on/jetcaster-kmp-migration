@@ -2,29 +2,29 @@ package com.example.jetcaster.ui.player
 
 import androidx.compose.runtime.Composable
 import androidx.window.core.layout.WindowSizeClass
-import androidx.window.core.layout.WindowWidthSizeClass
 import androidx.window.layout.FoldingFeature
+import com.example.jetcaster.ui.LocalDisplayFeatures
 import com.example.jetcaster.util.isBookPosture
 import com.example.jetcaster.util.isSeparatingPosture
 import com.example.jetcaster.util.isTableTopPosture
 
 @Composable
 actual fun getPlayerScreenDisplayStrategy(windowSizeClass: WindowSizeClass): PlayerScreenDisplayStrategy {
-    val displayFeatures = com.example.jetcaster.ui.LocalDisplayFeatures.current
-    val foldingFeature = displayFeatures.filterIsInstance<FoldingFeature>().firstOrNull()
+    val foldingFeature = LocalDisplayFeatures.current.filterIsInstance<FoldingFeature>().firstOrNull()
 
+    // Use a two pane layout if there is a fold impacting layout (meaning it is separating
+    // or non-flat) or if we have a large enough width to show both.
     return if (
-        windowSizeClass.windowWidthSizeClass == WindowWidthSizeClass.EXPANDED ||
+        windowSizeClass.isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_EXPANDED_LOWER_BOUND) ||
         isBookPosture(foldingFeature) ||
         isTableTopPosture(foldingFeature) ||
         isSeparatingPosture(foldingFeature)
     ) {
-        // Determine if we are going to be using a vertical strategy (as if laying out
-        // both sides in a column). We want to do so if we are in a tabletop posture,
-        // or we have an impactful horizontal fold. Otherwise, we'll use a horizontal strategy.
-        if (
-            isTableTopPosture(foldingFeature) || (isSeparatingPosture(foldingFeature) && foldingFeature.orientation == FoldingFeature.Orientation.HORIZONTAL)
-        ) {
+        // Lay both sides out in a column if we are in a tabletop posture or have an
+        // impactful horizontal fold. Otherwise, lay them out in a row.
+        val horizontalFold = isSeparatingPosture(foldingFeature) &&
+            foldingFeature.orientation == FoldingFeature.Orientation.HORIZONTAL
+        if (isTableTopPosture(foldingFeature) || horizontalFold) {
             PlayerScreenDisplayStrategy.VERTICAL
         } else {
             PlayerScreenDisplayStrategy.HORIZONTAL

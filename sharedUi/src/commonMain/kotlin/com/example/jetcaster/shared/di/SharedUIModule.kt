@@ -37,7 +37,6 @@ val sharedUiModule = module {
             .networkCachePolicy(CachePolicy.DISABLED)
             .build()
     }
-
 }
 
 val sharedViewModelModule = module {

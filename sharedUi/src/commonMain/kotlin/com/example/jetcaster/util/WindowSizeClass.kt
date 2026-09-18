@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 The Android Open Source Project
+ * Copyright 2024 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,13 @@
  * limitations under the License.
  */
 
-package com.example.jetcaster.di
+package com.example.jetcaster.util
 
-import com.example.jetcaster.ui.player.PlayerViewModel
-import org.koin.core.module.dsl.viewModel
-import org.koin.dsl.module
+import androidx.window.core.layout.WindowSizeClass
 
 /**
- * Koin module for providing ViewModels
+ * Returns true if the width or height size classes are compact.
  */
-val viewModelModule = module {
-
-    viewModel {
-        PlayerViewModel(
-            episodeStore = get(),
-            episodePlayer = get(),
-            savedStateHandle = get(),
-        )
-    }
-}
+val WindowSizeClass.isCompact: Boolean
+    get() = !isWidthAtLeastBreakpoint(WindowSizeClass.WIDTH_DP_MEDIUM_LOWER_BOUND) ||
+        !isHeightAtLeastBreakpoint(WindowSizeClass.HEIGHT_DP_MEDIUM_LOWER_BOUND)

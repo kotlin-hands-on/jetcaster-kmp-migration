@@ -82,6 +82,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.window.core.layout.WindowSizeClass
+import androidx.window.core.layout.computeWindowSizeClass
 import com.example.jetcaster.core.player.EpisodePlayerState
 import com.example.jetcaster.core.player.model.PlayerEpisode
 import com.example.jetcaster.core.designsystem.component.HtmlTextContainer
@@ -927,7 +928,7 @@ fun PlayerScreenPreview() {
                         ),
                     ),
                 ),
-                windowSizeClass = WindowSizeClass.compute(maxWidth.value, maxHeight.value),
+                windowSizeClass = WindowSizeClass.BREAKPOINTS_V1.computeWindowSizeClass(maxWidth.value, maxHeight.value),
                 onBackPress = { },
                 onAddToQueue = {},
                 onStop = {},
