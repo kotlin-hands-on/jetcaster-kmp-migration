@@ -1,0 +1,9 @@
+* text=auto
+
+*.sh text eol=lf
+*.bat text eol=crlf
+
+*.png binary
+
+# Kotlin CLI wrapper without extension
+kotlin text eol=lf

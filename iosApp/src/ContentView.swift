@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-import shared
+import KotlinModules
 import UIKit
 
 struct ComposeView: UIViewControllerRepresentable {

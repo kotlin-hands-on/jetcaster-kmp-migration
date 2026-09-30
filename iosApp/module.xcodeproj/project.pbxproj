@@ -45,7 +45,7 @@
 			exceptions = (
 				26D5C6962EB22FB2005B3A23 /* Exceptions for "JetcasterMigration" folder in "JetcasterMigration" target */,
 			);
-			path = JetcasterMigration;
+			path = src;
 			sourceTree = "<group>";
 		};
 		260DDD3F2EB223FE00169680 /* JetcasterMigrationTests */ = {
@@ -112,7 +112,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 260DDD502EB223FE00169680 /* Build configuration list for PBXNativeTarget "JetcasterMigration" */;
 			buildPhases = (
-				26088AA62EB224BA00601638 /* Run Script */,
+				26088AA62EB224BA00601638 /* Build Kotlin */,
 				260DDD2B2EB223FC00169680 /* Sources */,
 				260DDD2C2EB223FC00169680 /* Frameworks */,
 				260DDD2D2EB223FC00169680 /* Resources */,
@@ -246,7 +246,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		26088AA62EB224BA00601638 /* Run Script */ = {
+		26088AA62EB224BA00601638 /* Build Kotlin */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -256,14 +256,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Run Script";
+			name = "Build Kotlin";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ \"YES\" = \"$OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED\" ]; then\n  echo \"Skipping Gradle build task invocation due to OVERRIDE_KOTLIN_BUILD_IDE_SUPPORTED environment variable set to \\\"YES\\\"\"\n  exit 0\nfi\ncd \"$SRCROOT/..\"\n./gradlew :sharedUi:embedAndSignAppleFrameworkForXcode";
+			shellScript = "# !KOTLIN INTEGRATION STEP!\n# This script is managed by the Kotlin Toolchain, do not edit manually!\n\"${KOTLIN_CLI_WRAPPER_PATH}\" tool xcode-integration\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -440,7 +440,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = JetcasterMigration/Info.plist;
+				INFOPLIST_FILE = src/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited) $(TARGET_BUILD_DIR)/AmperFrameworks";
+				KOTLIN_CLI_WRAPPER_PATH = "$(SRCROOT)/../kotlin";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -474,7 +476,9 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = JetcasterMigration/Info.plist;
+				INFOPLIST_FILE = src/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited) $(TARGET_BUILD_DIR)/AmperFrameworks";
+				KOTLIN_CLI_WRAPPER_PATH = "$(SRCROOT)/../kotlin";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

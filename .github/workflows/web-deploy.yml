@@ -9,22 +9,21 @@ jobs:
     name: Build Kotlin/Wasm
     runs-on: ubuntu-latest
     steps:
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: 21
-
     - name: Check out code
       uses: actions/checkout@v4
 
-    - name: Run Gradle Tasks
-      run: ./gradlew :wasmApp:wasmJsBrowserDistribution
+    - name: Kotlin Toolchain setup
+      uses: ./.github/actions/kotlin-setup
+
+    - name: Build Wasm distribution
+      run: ./kotlin build -m wasmApp -v release
+      env:
+        KOTLIN_CLI_NO_WELCOME_BANNER: "1"
 
     - name: Upload Pages artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: wasmApp/build/dist/wasmJs/productionExecutable/
+        path: build/tasks/_wasmApp_buildWasmJsAppWasmJsRelease/
 
   deploy:
     needs: build

@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import sqlite3InitModule from '@sqlite.org/sqlite-wasm';
+// Vendored from @sqlite.org/sqlite-wasm 3.50.1-build1 (sqlite-wasm/jswasm/): the Kotlin Toolchain has no
+// bundler and no direct npm dependencies, so the worker imports the unbundled ES module build directly.
+import sqlite3InitModule from './sqlite3.mjs';
 
 let sqlite3 = null;
 let sahPool = null;

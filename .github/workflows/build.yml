@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  GRADLE_OPTS: "-Dorg.gradle.jvmargs=-Xmx4096M -Dorg.gradle.daemon=false -Dorg.gradle.parallel=true -Dorg.gradle.caching=true"
+  KOTLIN_CLI_NO_WELCOME_BANNER: "1"
 
 jobs:
   test:
@@ -17,17 +17,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
+      - name: Kotlin Toolchain setup
+        uses: ./.github/actions/kotlin-setup
 
       - name: Run unit tests
-        run: ./gradlew jvmTest
+        run: ./kotlin test -p jvm
 
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
-          path: "**/build/reports/tests/"
+          path: "build/reports/"
 
   build-android:
     name: Build Android
@@ -37,18 +37,17 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
+      - name: Kotlin Toolchain setup
+        uses: ./.github/actions/kotlin-setup
 
       - name: Build Android debug APK
-        run: ./gradlew :androidApp:assembleDebug
+        run: ./kotlin build -m androidApp
 
       - name: Upload Android debug APK
         uses: actions/upload-artifact@v4
         with:
           name: android-apk
-          path: androidApp/build/outputs/apk/debug/*.apk
-
+          path: build/tasks/_androidApp_buildAndroidDebug/*.apk
 
   build-ios:
     name: Build iOS simulator app
@@ -58,88 +57,58 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
+      - name: Kotlin Toolchain setup
+        uses: ./.github/actions/kotlin-setup
 
       - name: Set Xcode version
         run: sudo xcode-select -s /Applications/Xcode_26.2.app/Contents/Developer
 
+      # The "Build Kotlin" phase in the Xcode project calls ./kotlin tool xcode-integration.
+      # Derived data must not go to ./build: that is the Kotlin Toolchain's own output directory.
       - name: Build iOS simulator app
         run: |
           xcodebuild build \
-          -project iosApp/JetcasterMigration.xcodeproj \
+          -project iosApp/module.xcodeproj \
           -configuration Debug \
           -scheme JetcasterMigration \
           -sdk iphonesimulator \
           -arch arm64 \
-          -derivedDataPath ./build \
+          -derivedDataPath ./build-xcode \
           -verbose
 
       - name: Upload App Folder
         uses: actions/upload-artifact@v4
         with:
           name: iphonesimulator-app
-          path: build/Build/Products/Debug-iphonesimulator/*
+          path: build-xcode/Build/Products/Debug-iphonesimulator/*
 
-  build-desktop-macos:
-    name: Build Desktop macOS
-    runs-on: macos-latest
+  build-desktop:
+    name: Build Desktop ${{ matrix.format }}
     needs: test
+    strategy:
+      matrix:
+        include:
+          - { os: macos-latest, format: dmg }
+          - { os: windows-latest, format: msi }
+          - { os: ubuntu-latest, format: deb }
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
+      - name: Kotlin Toolchain setup
+        uses: ./.github/actions/kotlin-setup
 
-      - name: Build macOS DMG
-        run: ./gradlew :desktopApp:packageDmg
+      # The Kotlin Toolchain cannot make native installers; scripts/package-desktop.sh wraps jpackage.
+      - name: Build ${{ matrix.format }}
+        shell: bash
+        run: scripts/package-desktop.sh ${{ matrix.format }}
 
-      - name: Upload macOS DMG
+      - name: Upload ${{ matrix.format }}
         uses: actions/upload-artifact@v4
         with:
-          name: desktop-macos-dmg
-          path: desktopApp/build/compose/binaries/main/dmg/*.dmg
-
-  build-desktop-windows:
-    name: Build Desktop Windows
-    runs-on: windows-latest
-    needs: test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v5.0.0
-
-      - name: Build Windows MSI
-        run: ./gradlew :desktopApp:packageMsi
-
-      - name: Upload Windows MSI
-        uses: actions/upload-artifact@v4
-        with:
-          name: desktop-windows-msi
-          path: desktopApp/build/compose/binaries/main/msi/*.msi
-
-  build-desktop-linux:
-    name: Build Desktop Linux
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
-
-      - name: Build Linux DEB
-        run: ./gradlew :desktopApp:packageDeb
-
-      - name: Upload Linux DEB
-        uses: actions/upload-artifact@v4
-        with:
-          name: desktop-linux-deb
-          path: desktopApp/build/compose/binaries/main/deb/*.deb
+          name: desktop-${{ matrix.format }}
+          path: desktopApp/build-dist/${{ matrix.format }}/*
 
   build-wasm:
     name: Build Wasm
@@ -149,14 +118,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Gradle setup
-        uses: ./.github/actions/gradle-setup
+      - name: Kotlin Toolchain setup
+        uses: ./.github/actions/kotlin-setup
 
       - name: Build Wasm distribution
-        run: ./gradlew :wasmApp:wasmJsBrowserDistribution
+        run: ./kotlin build -m wasmApp -v release
 
       - name: Upload Wasm app
         uses: actions/upload-artifact@v4
         with:
           name: wasm-app
-          path: wasmApp/build/dist/wasmJs/productionExecutable/
+          path: build/tasks/_wasmApp_buildWasmJsAppWasmJsRelease/

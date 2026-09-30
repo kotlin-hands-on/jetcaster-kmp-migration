@@ -1,0 +1,14 @@
+# Settings every module shares. Replaces the per-module jvmToolchain(17) / jvmTarget and the
+# Kotlin, KSP and Compose Multiplatform plugin versions that gradle/libs.versions.toml [plugins] pinned.
+# Module templates cannot read [versions] from the catalog, so these are written out here.
+settings:
+  kotlin:
+    version: 2.4.10
+    ksp:
+      version: 2.3.9
+  jvm:
+    # Bytecode level of the Gradle build's jvmToolchain(17). Not jdk.version: 17 — as of 0.13.0-dev-4452
+    # the toolchain then runs its own KSP launcher (built for Java 25) on JDK 17, and KSP fails.
+    release: 17
+  compose:
+    version: 1.12.1

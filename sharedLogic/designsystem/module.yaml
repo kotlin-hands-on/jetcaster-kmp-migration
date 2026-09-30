@@ -1,0 +1,35 @@
+product:
+  type: kmp/lib
+  platforms: [android, iosArm64, iosSimulatorArm64, jvm, wasmJs]
+
+apply:
+  - //templates/kmp-lib.module-template.yaml
+
+dependencies:
+  # Compose Multiplatform dependencies
+  - $libs.compose.runtime
+  - $libs.compose.foundation
+  - $libs.compose.material3
+  - $libs.compose.ui
+  - $libs.compose.components.resources
+  # Image loading
+  - $libs.coil.kt.compose
+  # Dependency injection
+  - $libs.koin.core
+  - $libs.koin.compose
+  # HTML text converter
+  - $libs.html.converter
+  # Dates and times
+  - $libs.kotlinx.datetime
+
+dependencies@android:
+  - $libs.coil.network.okhttp
+
+settings:
+  android:
+    namespace: com.example.jetcaster.core.designsystem
+  compose:
+    enabled: true
+    resources:
+      packageName: com.example.jetcaster.core.designsystem
+      exposedAccessors: true

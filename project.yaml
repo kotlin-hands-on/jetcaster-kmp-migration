@@ -1,0 +1,11 @@
+modules:
+  - androidApp
+  - desktopApp
+  - iosApp
+  - sharedLogic/data
+  - sharedLogic/data-testing
+  - sharedLogic/designsystem
+  - sharedLogic/domain
+  - sharedLogic/domain-testing
+  - sharedUi
+  - wasmApp

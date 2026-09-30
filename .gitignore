@@ -42,3 +42,10 @@ captures
 /.google/
 /.google/
 /.junie
+
+# Kotlin Toolchain
+/build/
+.kotlin/
+androidApp/keystore.properties
+desktopApp/build-dist/
+build-xcode/

@@ -1,5 +1,4 @@
 [versions]
-agp = "9.1.1"
 android-compileSdk = "37"
 # @keep
 android-minSdk = "24"
@@ -26,10 +25,8 @@ kotlin = "2.4.10"
 kotlinx-collections-immutable = "0.4.0"
 kotlinx-coroutines = "1.11.0"
 kotlinx-datetime = "0.8.0"
-ksp = "2.3.9"
 ktor = "3.5.1"
 rssparser = "6.1.5"
-spotless = "8.7.0"
 uri-kmp = "0.0.21"
 
 [libraries]
@@ -77,14 +74,3 @@ ktor-client-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
 rssparser = { module = "com.prof18.rssparser:rssparser", version.ref = "rssparser" }
 uri-kmp = { module = "com.eygraber:uri-kmp", version.ref = "uri-kmp" }
 kotlinx-browser = { module = "org.jetbrains.kotlinx:kotlinx-browser", version = "0.5.0" }
-
-[plugins]
-android-application = { id = "com.android.application", version.ref = "agp" }
-compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
-spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
-androidx-room = { id = "androidx.room3", version.ref = "androidx-room" }
-android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
-kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

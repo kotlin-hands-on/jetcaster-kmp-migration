@@ -1,0 +1,42 @@
+product: android/app
+
+apply:
+  - //templates/common.module-template.yaml
+
+dependencies:
+  - //sharedUi
+  - $libs.koin.android
+  - $libs.androidx.activity.compose
+  - $libs.androidx.compose.ui.tooling.preview
+  - $libs.androidx.window
+
+settings:
+  compose: enabled
+  kotlin:
+    # The Gradle composeCompiler { reportsDestination, metricsDestination, stabilityConfigurationFiles } block;
+    # the toolchain has no keys for these, so they go to the Compose compiler plugin directly.
+    freeCompilerArgs:
+      - -P
+      - plugin:androidx.compose.compiler.plugins.kotlin:reportsDestination=build/compose_compiler
+      - -P
+      - plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=build/compose_compiler
+      - -P
+      - plugin:androidx.compose.compiler.plugins.kotlin:stabilityConfigurationPath=stability_config.conf
+  android:
+    namespace: com.example.jetcaster
+    applicationId: com.example.jetcaster
+    compileSdk: 37
+    minSdk: 24
+    targetSdk: 37
+    versionCode: 1
+    versionName: "1.0"
+    # Release signing. keystore.properties is not committed (see keystore.properties.example)
+    signing:
+      enabled: true
+      propertiesFile: ./keystore.properties
+    resourcePackaging:
+      # Multiple dependency bring these files in. Exclude them to enable
+      # our test APK to build (has no effect on our AARs)
+      excludes:
+        - /META-INF/AL2.0
+        - /META-INF/LGPL2.1

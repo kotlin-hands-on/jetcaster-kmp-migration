@@ -17,6 +17,7 @@
 package com.example.jetcaster
 
 import android.app.Application
+import android.content.pm.ApplicationInfo
 import androidx.compose.runtime.Composer
 import androidx.compose.runtime.ExperimentalComposeRuntimeApi
 import com.example.jetcaster.shared.di.initJetcasterDi
@@ -32,7 +33,8 @@ class JetcasterApplication : Application() {
         super.onCreate()
 
         @OptIn(ExperimentalComposeRuntimeApi::class)
-        Composer.setDiagnosticStackTraceEnabled(BuildConfig.DEBUG)
+        // Kotlin Toolchain generates no BuildConfig; the debuggable flag is set for debug builds only
+        Composer.setDiagnosticStackTraceEnabled(applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE != 0)
 
 
         initJetcasterDi {

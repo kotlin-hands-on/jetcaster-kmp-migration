@@ -1,0 +1,16 @@
+product: jvm/app
+
+apply:
+  - //templates/common.module-template.yaml
+
+dependencies:
+  - //sharedUi
+  - $compose.desktop.currentOs
+  - $libs.compose.material3.adaptive
+  - $libs.koin.compose
+  - $libs.kotlinx.coroutines.swing
+
+settings:
+  compose: enabled
+  jvm:
+    mainClass: com.example.jetcaster.shared.MainKt

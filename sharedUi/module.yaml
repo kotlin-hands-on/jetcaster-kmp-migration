@@ -1,0 +1,70 @@
+product:
+  type: kmp/lib
+  platforms: [android, iosArm64, iosSimulatorArm64, jvm, wasmJs]
+
+apply:
+  - //templates/kmp-lib.module-template.yaml
+
+dependencies:
+  - //sharedLogic/data: exported
+  - //sharedLogic/domain: exported
+  - //sharedLogic/designsystem: exported
+  - //sharedLogic/domain-testing
+
+  - $libs.kotlinx.coroutines.core
+
+  # Dependency injection
+  - $libs.koin.core: exported
+  - $libs.koin.compose: exported
+  - $libs.koin.compose.viewmodel
+
+  # Compose Multiplatform dependencies
+  - $libs.compose.runtime
+  - $libs.compose.foundation
+  - $libs.compose.material3: exported
+  - $libs.compose.material3.adaptive: exported
+  - $libs.compose.material3.adaptive.layout
+  - $libs.compose.material3.adaptive.navigation
+  - $libs.compose.ui
+  # Needed explicitly, otherwise BackHandler does not resolve
+  - $libs.compose.ui.backhandler
+  - $libs.compose.components.ui.tooling.preview
+  - $libs.compose.components.resources
+  - $libs.compose.navigation
+
+  # Image loading
+  - $libs.coil.kt.compose
+
+  - $libs.uri.kmp
+  - $libs.kotlinx.datetime
+  - $libs.kotlinx.collections.immutable
+
+  - $libs.androidx.lifecycle.runtime.compose
+
+dependencies@android:
+  - $libs.kotlinx.coroutines.android
+  - $libs.androidx.activity.compose
+  - $libs.coil.network.ktor3
+  - $libs.androidx.window
+
+dependencies@ios:
+  - $libs.ktor.client.darwin
+  - $libs.coil.network.ktor3
+
+dependencies@jvm:
+  - $libs.kotlinx.coroutines.swing
+  - $compose.desktop.currentOs
+  - $libs.coil.network.okhttp
+
+dependencies@wasmJs:
+  - $libs.coil.network.ktor3
+  - $libs.ktor.client.js
+
+settings:
+  android:
+    namespace: com.example.jetcaster.sharedui
+  compose:
+    enabled: true
+    resources:
+      packageName: com.example.jetcaster.shared
+      exposedAccessors: true

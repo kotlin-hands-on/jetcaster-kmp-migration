@@ -1,0 +1,8 @@
+# Settings every shared KMP library shares (the per-module compileSdk/minSdk in the Gradle build).
+apply:
+  - common.module-template.yaml
+
+settings:
+  android:
+    compileSdk: 37
+    minSdk: 24

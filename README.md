@@ -47,10 +47,23 @@ guide.
 
 ## Building and running
 
-For best results, install IntelliJ IDEA or Android Studio with the [Kotlin Multiplatform plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform/versions).
-The IDE can help set up the build infrastructure for you and generate run configurations for each entry point.
+The project is built with the [Kotlin Toolchain](https://kotlin-toolchain.org). The `./kotlin` wrapper in the
+project root downloads the pinned toolchain version on first use; there is nothing else to install.
+
+| Target | Command |
+|---|---|
+| Tests (JVM) | `./kotlin test -p jvm` |
+| Android | `./kotlin run -m androidApp` (installs on a running emulator or device) |
+| Desktop | `./kotlin run -m desktopApp` |
+| Web | `./kotlin run -m wasmApp` (serves the app and opens a browser) |
+| iOS | `./kotlin run -m iosApp -p iosSimulatorArm64`, or open `iosApp/module.xcodeproj` in Xcode |
+| Desktop installer | `scripts/package-desktop.sh` (DMG, MSI or DEB, via `jpackage`) |
+
+For IDE support, install IntelliJ IDEA with the [Kotlin Toolchain plugin](https://plugins.jetbrains.com/plugin/31850),
+plus the [Kotlin Multiplatform plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform/versions) for the iOS target.
 
 Building and running the iOS app requires a Mac with [Xcode](https://apps.apple.com/us/app/xcode/id497799835) installed.
+To sign Android release builds, copy `androidApp/keystore.properties.example` to `androidApp/keystore.properties`.
 
 ## The web app
 

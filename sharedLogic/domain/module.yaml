@@ -1,0 +1,28 @@
+product:
+  type: kmp/lib
+  platforms: [android, iosArm64, iosSimulatorArm64, jvm, wasmJs]
+
+apply:
+  - //templates/kmp-lib.module-template.yaml
+
+dependencies:
+  - //sharedLogic/data
+  - $libs.koin.core
+  - $libs.kotlinx.coroutines.core
+  - $libs.kotlinx.datetime
+
+dependencies@android:
+  - $libs.kotlinx.coroutines.android
+  - $libs.koin.android
+
+dependencies@jvm:
+  - $libs.kotlinx.coroutines.swing
+
+# kotlin-test is added to tests automatically
+test-dependencies:
+  - //sharedLogic/data-testing
+  - $libs.kotlinx.coroutines.test
+
+settings:
+  android:
+    namespace: com.example.jetcaster.core.domain

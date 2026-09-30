@@ -1,0 +1,44 @@
+product:
+  type: kmp/lib
+  platforms: [android, iosArm64, iosSimulatorArm64, jvm, wasmJs]
+
+apply:
+  - //templates/kmp-lib.module-template.yaml
+
+dependencies:
+  # We need @Immutable annotations here
+  - $libs.androidx.compose.runtime.annotation
+  # Dependency injection
+  - $libs.koin.core
+  # Database
+  - $libs.androidx.room.runtime
+  # RSS Parser library
+  - $libs.rssparser
+  - $libs.kotlinx.coroutines.core
+  # Dates and times
+  - $libs.kotlinx.datetime
+
+dependencies@android:
+  - $libs.kotlinx.coroutines.android
+  - $libs.androidx.sqlite.bundled
+
+dependencies@jvm:
+  - $libs.androidx.sqlite.bundled
+
+dependencies@ios:
+  - $libs.konnectivity
+  - $libs.androidx.sqlite.bundled
+
+dependencies@wasmJs:
+  # The browser has no file system, so SQLite runs in a web worker with OPFS
+  - $libs.androidx.sqlite.web
+  - $libs.kotlinx.browser
+  - $libs.kotlinx.coroutines.core.wasm.js
+
+settings:
+  android:
+    namespace: com.example.jetcaster.core.data
+  kotlin:
+    ksp:
+      processors:
+        - $libs.androidx.room.compiler
